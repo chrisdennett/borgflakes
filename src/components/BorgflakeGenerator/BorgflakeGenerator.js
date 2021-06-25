@@ -23,8 +23,8 @@ export default function BorgflakeGenerator() {
     bg: "#333",
     gridPoints,
     borgLines,
-    lineColour: "red",
-    lineThickness: 10,
+    lineColour: "white",
+    lineThickness: 5,
   };
 
   return (

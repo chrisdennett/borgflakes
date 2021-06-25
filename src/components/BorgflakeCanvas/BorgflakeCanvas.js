@@ -46,6 +46,13 @@ export default function BorgflakeCanvas({
       }
       ctx.stroke();
     }
+
+    if (borgLines.length > 0) {
+      ctx.beginPath();
+      ctx.fillStyle = "green";
+      ctx.arc(borgLines[0][0].x, borgLines[0][0].y, 5, 0, 2 * Math.PI);
+      ctx.fill();
+    }
   });
 
   return <canvas ref={canvasRef} className={styles.borgflakeCanvas} />;
