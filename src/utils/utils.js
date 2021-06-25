@@ -12,12 +12,22 @@ export function generateGridData({ w, h, cellSize }) {
       let aboveIndex = null;
       let belowIndex = null;
 
+      const isMiddlePt =
+        r === Math.round(rows / 2) && c === Math.round(cols / 2);
+
       if (c !== 0) leftIndex = currIndex - 1;
       if (c < cols) rightIndex = currIndex + 1;
       if (r !== 0) aboveIndex = currIndex - (cols + 1);
       if (r < rows) belowIndex = currIndex + (cols + 1);
 
-      gridPoints.push({ ...pt, leftIndex, rightIndex, aboveIndex, belowIndex });
+      gridPoints.push({
+        ...pt,
+        leftIndex,
+        rightIndex,
+        aboveIndex,
+        belowIndex,
+        isMiddlePt,
+      });
     }
   }
 
@@ -28,7 +38,10 @@ export function generateBorglines({ gridPoints }) {
   let pts = [...gridPoints];
 
   const lines = [];
-  const startPt = pts[getRandomInt({ max: gridPoints.length })];
+  const middlePt = gridPoints.find((pt) => pt.isMiddlePt);
+  console.log("middlePt: ", middlePt);
+
+  const startPt = middlePt; //pts[getRandomInt({ max: gridPoints.length })];
   let line = generateLine(startPt, gridPoints);
   lines.push(line);
 

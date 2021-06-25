@@ -8,11 +8,11 @@ export default function BorgflakeGenerator() {
   const [gridPoints, setGridPoints] = useState([]);
   const [borgLines, setBorgLines] = useState([]);
   const [flakeSize] = useState({ w: 800, h: 800 });
-  const [cellSize] = useState(20);
+  const [cellSize] = useState(10);
 
   useEffect(() => {
     const pts = generateGridData({ ...flakeSize, cellSize });
-    setGridPoints(pts);
+    // setGridPoints(pts);
     const lines = generateBorglines({ gridPoints: pts });
     setBorgLines(lines);
   }, [flakeSize, cellSize]);
@@ -24,7 +24,7 @@ export default function BorgflakeGenerator() {
     gridPoints,
     borgLines,
     lineColour: "white",
-    lineThickness: 5,
+    lineThickness: 2,
   };
 
   return (
