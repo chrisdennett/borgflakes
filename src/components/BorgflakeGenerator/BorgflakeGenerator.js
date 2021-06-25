@@ -8,7 +8,7 @@ export default function BorgflakeGenerator() {
   const [gridPoints, setGridPoints] = useState([]);
   const [borgLines, setBorgLines] = useState([]);
   const [flakeSize] = useState({ w: 800, h: 800 });
-  const [cellSize] = useState(50);
+  const [cellSize] = useState(20);
 
   useEffect(() => {
     const pts = generateGridData({ ...flakeSize, cellSize });

@@ -27,33 +27,75 @@ export function generateGridData({ w, h, cellSize }) {
 export function generateBorglines({ gridPoints }) {
   let pts = [...gridPoints];
 
+  const lines = [];
   const startPt = pts[getRandomInt({ max: gridPoints.length })];
+  let line = generateLine(startPt, gridPoints);
+  lines.push(line);
+
+  while (getAvailableNextPts(startPt, pts).length > 0) {
+    line = generateLine(startPt, gridPoints);
+    lines.push(line);
+  }
+
+  return lines;
+}
+
+function generateLine(startPt, pts) {
   const line = [startPt];
+  startPt.isUsed = true;
 
-  let nextPt = startPt.leftIndex ? pts[startPt.leftIndex] : null;
-  if (nextPt) {
+  let nextPt = getNextPt(startPt, pts);
+  while (nextPt) {
     line.push(nextPt);
+    nextPt.isUsed = true;
+
+    nextPt = getNextPt(nextPt, pts);
   }
 
-  nextPt = startPt.rightIndex ? pts[startPt.rightIndex] : null;
-  if (nextPt) {
-    line.push(nextPt);
+  return line;
+}
+
+function getNextPt(pt, pts) {
+  let nextPt = null;
+
+  const possPts = getAvailableNextPts(pt, pts);
+
+  if (possPts.length > 0) {
+    const randInt = getRandomInt({ max: possPts.length - 1 });
+    nextPt = possPts[randInt];
   }
 
-  nextPt = startPt.aboveIndex ? pts[startPt.aboveIndex] : null;
-  if (nextPt) {
-    line.push(nextPt);
+  return nextPt;
+}
+
+function getAvailableNextPts(pt, allPts) {
+  const { rightIndex, leftIndex, aboveIndex, belowIndex } = pt;
+
+  const availablePts = [];
+  if (rightIndex && !allPts[rightIndex].isUsed) {
+    availablePts.push(allPts[rightIndex]);
   }
 
-  nextPt = startPt.belowIndex ? pts[startPt.belowIndex] : null;
-  if (nextPt) {
-    line.push(nextPt);
+  if (leftIndex && !allPts[leftIndex].isUsed) {
+    availablePts.push(allPts[leftIndex]);
   }
 
-  return [line];
+  if (aboveIndex && !allPts[aboveIndex].isUsed) {
+    availablePts.push(allPts[aboveIndex]);
+  }
+
+  if (belowIndex && !allPts[belowIndex].isUsed) {
+    availablePts.push(allPts[belowIndex]);
+  }
+
+  return availablePts;
 }
 
 function getRandomInt({ min = 0, max = 10 }) {
+  if (max <= min) {
+    return 0;
+  }
+
   const range = max - min;
   return min + Math.round(Math.random() * range);
 }
