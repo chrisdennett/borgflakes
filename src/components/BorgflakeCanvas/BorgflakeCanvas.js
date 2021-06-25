@@ -9,6 +9,8 @@ export default function BorgflakeCanvas({
   borgLines,
   lineColour,
   lineThickness,
+  drawCenterPt,
+  drawGrid,
 }) {
   const canvasRef = useRef(null);
 
@@ -24,11 +26,13 @@ export default function BorgflakeCanvas({
     ctx.fillStyle = bg;
     ctx.fillRect(0, 0, w, h);
 
-    for (let pt of gridPoints) {
-      ctx.beginPath();
-      ctx.fillStyle = "white";
-      ctx.arc(pt.x, pt.y, 2, 0, 2 * Math.PI);
-      ctx.fill();
+    if (drawGrid) {
+      for (let pt of gridPoints) {
+        ctx.beginPath();
+        ctx.fillStyle = "white";
+        ctx.arc(pt.x, pt.y, 1, 0, 2 * Math.PI);
+        ctx.fill();
+      }
     }
 
     // BORG LINES
@@ -36,18 +40,19 @@ export default function BorgflakeCanvas({
     ctx.lineJoin = "round";
     ctx.strokeStyle = lineColour;
     ctx.lineWidth = lineThickness;
-    for (let line of borgLines) {
-      const linePts = line;
 
-      ctx.beginPath();
-      ctx.moveTo(linePts[0].x, linePts[0].y);
-      for (let i = 1; i < linePts.length; i++) {
-        ctx.lineTo(linePts[i].x, linePts[i].y);
-      }
-      ctx.stroke();
-    }
+    drawLines(ctx, borgLines);
+    ctx.translate(w, 0);
+    ctx.scale(-1, 1);
+    drawLines(ctx, borgLines);
+    ctx.translate(0, h);
+    ctx.scale(1, -1);
+    drawLines(ctx, borgLines);
+    ctx.translate(w, 0);
+    ctx.scale(-1, 1);
+    drawLines(ctx, borgLines);
 
-    if (borgLines.length > 0) {
+    if (borgLines.length > 0 && drawCenterPt) {
       ctx.beginPath();
       ctx.fillStyle = "green";
       ctx.arc(borgLines[0][0].x, borgLines[0][0].y, 5, 0, 2 * Math.PI);
@@ -57,3 +62,16 @@ export default function BorgflakeCanvas({
 
   return <canvas ref={canvasRef} className={styles.borgflakeCanvas} />;
 }
+
+const drawLines = (ctx, borgLines) => {
+  for (let line of borgLines) {
+    const linePts = line;
+
+    ctx.beginPath();
+    ctx.moveTo(linePts[0].x, linePts[0].y);
+    for (let i = 1; i < linePts.length; i++) {
+      ctx.lineTo(linePts[i].x, linePts[i].y);
+    }
+    ctx.stroke();
+  }
+};

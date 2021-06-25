@@ -39,7 +39,6 @@ export function generateBorglines({ gridPoints }) {
 
   const lines = [];
   const middlePt = gridPoints.find((pt) => pt.isMiddlePt);
-  console.log("middlePt: ", middlePt);
 
   const startPt = middlePt; //pts[getRandomInt({ max: gridPoints.length })];
   let line = generateLine(startPt, gridPoints);
