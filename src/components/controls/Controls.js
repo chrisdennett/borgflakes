@@ -1,10 +1,20 @@
 import React, { useEffect } from "react";
-import { Leva, useControls } from "leva";
-import { useQueryParams, BooleanParam } from "use-query-params";
+import { folder, Leva, useControls } from "leva";
+import {
+  useQueryParams,
+  BooleanParam,
+  StringParam,
+  NumberParam,
+} from "use-query-params";
 
 export default function Controls({ showControls = true, onChange }) {
   const [query, setQuery] = useQueryParams({
     drawGrid: BooleanParam,
+    bgColour: StringParam,
+    lineColour: StringParam,
+    canvasWidth: NumberParam,
+    canvasHeight: NumberParam,
+    lineThickness: NumberParam,
   });
 
   const [values, set] = useControls(() => ({
@@ -12,6 +22,42 @@ export default function Controls({ showControls = true, onChange }) {
       value: false,
       onChange: (value) => setQuery({ drawGrid: value }),
     },
+
+    Colours: folder({
+      bgColour: {
+        value: "#333",
+        onChange: (value) => setQuery({ bgColour: value }),
+      },
+      lineColour: {
+        value: "#fff",
+        onChange: (value) => setQuery({ lineColour: value }),
+      },
+    }),
+
+    lineThickness: {
+      value: 1,
+      step: 1,
+      min: 0.2,
+      max: 20,
+      onChange: (value) => setQuery({ lineThickness: value }),
+    },
+
+    CanvasSize: folder({
+      canvasWidth: {
+        value: 800,
+        step: 1,
+        min: 10,
+        max: 1000,
+        onChange: (value) => setQuery({ canvasWidth: value }),
+      },
+      canvasHeight: {
+        value: 800,
+        step: 1,
+        min: 10,
+        max: 1000,
+        onChange: (value) => setQuery({ canvasHeight: value }),
+      },
+    }),
   }));
 
   useEffect(() => {

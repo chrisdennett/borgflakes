@@ -1,7 +1,7 @@
-export function generateGridData({ w, h, cellSize }) {
+export function generateGridData({ canvasWidth, canvasHeight, cellSize }) {
   const gridPoints = [];
-  const cols = Math.ceil(w / cellSize);
-  const rows = Math.ceil(h / cellSize);
+  const cols = Math.ceil(canvasWidth / cellSize);
+  const rows = Math.ceil(canvasHeight / cellSize);
 
   for (let r = 0; r <= rows; r++) {
     for (let c = 0; c <= cols; c++) {

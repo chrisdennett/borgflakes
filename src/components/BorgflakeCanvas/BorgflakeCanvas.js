@@ -2,9 +2,9 @@ import { useEffect, useRef } from "react";
 import styles from "./BorgflakeCanvas.module.css";
 
 export default function BorgflakeCanvas({
-  w,
-  h,
-  bg,
+  canvasWidth,
+  canvasHeight,
+  bgColour,
   gridPoints,
   borgLines,
   lineColour,
@@ -18,13 +18,13 @@ export default function BorgflakeCanvas({
     if (!canvasRef.current) return;
 
     const canvas = canvasRef.current;
-    canvas.width = w;
-    canvas.height = h;
+    canvas.width = canvasWidth;
+    canvas.height = canvasHeight;
 
     const ctx = canvas.getContext("2d");
     // create background
-    ctx.fillStyle = bg;
-    ctx.fillRect(0, 0, w, h);
+    ctx.fillStyle = bgColour;
+    ctx.fillRect(0, 0, canvasWidth, canvasHeight);
 
     if (drawGrid) {
       for (let pt of gridPoints) {
@@ -42,13 +42,13 @@ export default function BorgflakeCanvas({
     ctx.lineWidth = lineThickness;
 
     drawLines(ctx, borgLines);
-    ctx.translate(w, 0);
+    ctx.translate(canvasWidth, 0);
     ctx.scale(-1, 1);
     drawLines(ctx, borgLines);
-    ctx.translate(0, h);
+    ctx.translate(0, canvasHeight);
     ctx.scale(1, -1);
     drawLines(ctx, borgLines);
-    ctx.translate(w, 0);
+    ctx.translate(canvasWidth, 0);
     ctx.scale(-1, 1);
     drawLines(ctx, borgLines);
 

@@ -7,25 +7,29 @@ import { generateBorglines, generateGridData } from "../../utils/utils";
 export default function BorgflakeGenerator({ params }) {
   const [gridPoints, setGridPoints] = useState([]);
   const [borgLines, setBorgLines] = useState([]);
-  const [flakeSize] = useState({ w: 800, h: 800 });
+  // const [flakeSize] = useState({ w: 800, h: 800 });
   const [cellSize] = useState(6);
 
+  const { canvasWidth, canvasHeight } = params;
+
   useEffect(() => {
-    const pts = generateGridData({ ...flakeSize, cellSize });
+    if (!canvasWidth || !canvasHeight || !cellSize) return;
+
+    const pts = generateGridData({
+      canvasWidth,
+      canvasHeight,
+      cellSize,
+    });
     setGridPoints(pts);
     const lines = generateBorglines({ gridPoints: pts });
     setBorgLines(lines);
-  }, [flakeSize, cellSize]);
+  }, [params, cellSize]);
 
   // render //
   const props = {
-    ...flakeSize,
     ...params,
-    bg: "#333",
     gridPoints,
     borgLines,
-    lineColour: "rgba(255,255,255,1)",
-    lineThickness: 2,
     drawCenterPt: false,
     mirrorLeftRight: true,
     mirrorTopBottom: true,
