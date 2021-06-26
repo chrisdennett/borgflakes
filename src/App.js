@@ -1,4 +1,5 @@
 import { useState } from "react";
+import "./globalStyles.css";
 import BorgflakeGenerator from "./components/BorgflakeGenerator/BorgflakeGenerator";
 import Controls from "./components/controls/Controls";
 

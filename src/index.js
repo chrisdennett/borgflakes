@@ -1,9 +1,9 @@
 import React from "react";
 import ReactDOM from "react-dom";
-import "./globalStyles.css";
-import App from "./App";
 import { BrowserRouter as Router, Route } from "react-router-dom";
 import { QueryParamProvider } from "use-query-params";
+
+import App from "./App";
 
 const rootElement = document.getElementById("root");
 ReactDOM.render(
