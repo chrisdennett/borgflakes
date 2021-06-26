@@ -1,9 +1,16 @@
 .borgflakeGenerator {
   min-width: 100%;
   min-height: 100vh;
-  background: gainsboro;
+  /* background: gainsboro; */
   padding: 0;
   display: flex;
   justify-content: space-around;
   align-items: center;
+  flex-wrap: wrap;
+}
+
+.flakeHolder {
+  flex: 1;
+  min-width: 200px;
+  text-align: center;
 }

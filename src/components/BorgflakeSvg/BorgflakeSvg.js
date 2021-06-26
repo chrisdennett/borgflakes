@@ -15,7 +15,7 @@ export default function BorgflakeSvg({
   mirrorTopBottom,
 }) {
   return (
-    <svg width={w} height={h} className={styles.borgflakeSvg}>
+    <svg viewBox={`0 0 ${w} ${h}`} className={styles.borgflakeSvg}>
       <rect x={0} y={0} width={w} height={w} fill={bg} />;
       {drawGrid &&
         gridPoints.map((pt, i) => (

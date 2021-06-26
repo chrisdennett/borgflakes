@@ -1,9 +1,18 @@
+import { useState } from "react";
 import BorgflakeGenerator from "./components/BorgflakeGenerator/BorgflakeGenerator";
+import Controls from "./components/controls/Controls";
 
 function App() {
+  const [params, setParams] = useState({});
+
+  const onParamsChange = (newParams) => {
+    setParams(newParams);
+  };
+
   return (
     <div className="app">
-      <BorgflakeGenerator />
+      <Controls onChange={onParamsChange} />
+      <BorgflakeGenerator params={params} />
     </div>
   );
 }

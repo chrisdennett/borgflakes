@@ -35,5 +35,10 @@ img {
 }
 
 body {
-  background-color: rgb(25, 25, 25);
+  background-image: linear-gradient(
+      to bottom,
+      hsla(38, 76%, 13%, 0.21),
+      hsla(38, 76%, 13%, 0.42)
+    ),
+    url(./images/purty_wood.png);
 }
