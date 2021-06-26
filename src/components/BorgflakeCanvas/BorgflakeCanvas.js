@@ -9,7 +9,7 @@ export default function BorgflakeCanvas({
   borgLines,
   lineColour,
   lineThickness,
-  drawCenterPt,
+  drawStartPt,
   drawGrid,
 }) {
   const canvasRef = useRef(null);
@@ -52,10 +52,10 @@ export default function BorgflakeCanvas({
     ctx.scale(-1, 1);
     drawLines(ctx, borgLines);
 
-    if (borgLines.length > 0 && drawCenterPt) {
+    if (borgLines.length > 0 && drawStartPt) {
       ctx.beginPath();
       ctx.fillStyle = "green";
-      ctx.arc(borgLines[0][0].x, borgLines[0][0].y, 5, 0, 2 * Math.PI);
+      ctx.arc(borgLines[0][0].x - 3, borgLines[0][0].y - 3, 6, 0, 2 * Math.PI);
       ctx.fill();
     }
   });

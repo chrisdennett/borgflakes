@@ -9,7 +9,7 @@ export default function BorgflakeSvg({
   borgLines,
   lineColour,
   lineThickness,
-  drawCenterPt,
+  drawStartPt,
   drawGrid,
   mirrorLeftRight,
   mirrorTopBottom,
@@ -17,6 +17,7 @@ export default function BorgflakeSvg({
   return (
     <svg
       viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
+      style={{ maxHeight: canvasHeight, maxWidth: canvasWidth }}
       className={styles.borgflakeSvg}
     >
       <rect
@@ -63,12 +64,12 @@ export default function BorgflakeSvg({
           )}
         </g>
       ))}
-      {borgLines.length > 0 && drawCenterPt && (
+      {borgLines.length > 0 && drawStartPt && (
         <circle
           fill="green"
-          cx={borgLines[0][0].x}
-          cy={borgLines[0][0].y}
-          r={5}
+          cx={borgLines[0][0].x - 3}
+          cy={borgLines[0][0].y - 3}
+          r={6}
         />
       )}
     </svg>

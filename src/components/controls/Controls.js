@@ -1,5 +1,5 @@
 import React, { useEffect } from "react";
-import { folder, Leva, useControls } from "leva";
+import { button, folder, Leva, useControls } from "leva";
 import {
   useQueryParams,
   BooleanParam,
@@ -9,18 +9,52 @@ import {
 
 export default function Controls({ showControls = true, onChange }) {
   const [query, setQuery] = useQueryParams({
+    generate: StringParam,
+    drawCanvas: BooleanParam,
+    drawSvg: BooleanParam,
     drawGrid: BooleanParam,
+    mirrorLeftRight: BooleanParam,
+    mirrorTopBottom: BooleanParam,
+    drawStartPt: BooleanParam,
     bgColour: StringParam,
     lineColour: StringParam,
     canvasWidth: NumberParam,
     canvasHeight: NumberParam,
+    cellSize: NumberParam,
     lineThickness: NumberParam,
   });
 
   const [values, set] = useControls(() => ({
+    generate: button(() => setQuery({ generate: Date.now() })),
+
+    drawSvg: {
+      value: false,
+      onChange: (value) => setQuery({ drawSvg: value }),
+    },
+
+    drawCanvas: {
+      value: false,
+      onChange: (value) => setQuery({ drawCanvas: value }),
+    },
+
     drawGrid: {
       value: false,
       onChange: (value) => setQuery({ drawGrid: value }),
+    },
+
+    mirrorLeftRight: {
+      value: false,
+      onChange: (value) => setQuery({ mirrorLeftRight: value }),
+    },
+
+    mirrorTopBottom: {
+      value: false,
+      onChange: (value) => setQuery({ mirrorTopBottom: value }),
+    },
+
+    drawStartPt: {
+      value: false,
+      onChange: (value) => setQuery({ drawStartPt: value }),
     },
 
     Colours: folder({
@@ -56,6 +90,14 @@ export default function Controls({ showControls = true, onChange }) {
         min: 10,
         max: 1000,
         onChange: (value) => setQuery({ canvasHeight: value }),
+      },
+
+      cellSize: {
+        value: 10,
+        step: 1,
+        min: 1,
+        max: 100,
+        onChange: (value) => setQuery({ cellSize: value }),
       },
     }),
   }));
