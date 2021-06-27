@@ -47,32 +47,51 @@ export default function BorgflakeSvg({
             cellSize={cellSize}
             mirrorLeftRight={mirrorLeftRight}
             mirrorTopBottom={mirrorTopBottom}
+            canvasWidth={canvasWidth}
+            canvasHeight={canvasHeight}
           />
         </g>
       ))}
       {borgLines.length > 0 && drawStartPt && (
-        <circle
-          stroke="red"
-          strokeWidth="2"
-          fill="none"
-          cx={borgLines[0][0].x}
-          cy={borgLines[0][0].y}
-          r={6}
-        />
+        <>
+          <circle
+            stroke="white"
+            strokeWidth="6"
+            fill="none"
+            cx={borgLines[0][0].x}
+            cy={borgLines[0][0].y}
+            r={6}
+          />
+          <circle
+            stroke="green"
+            strokeWidth="2"
+            fill="none"
+            cx={borgLines[0][0].x}
+            cy={borgLines[0][0].y}
+            r={6}
+          />
+        </>
       )}
     </svg>
   );
 }
 
-function BorgLine({ pts, cellSize, mirrorLeftRight, mirrorTopBottom }) {
-  const line = makePathFromDirection(pts, cellSize);
+function BorgLine({
+  pts,
+  cellSize,
+  mirrorLeftRight,
+  mirrorTopBottom,
+  canvasWidth,
+  canvasHeight,
+}) {
+  const line = makePath(pts, cellSize);
 
   return (
     <>
       <path d={line} stroke="red" strokeWidth="8" />
       <path d={line} />
 
-      {/* {mirrorLeftRight && (
+      {mirrorLeftRight && (
         <g transform={`translate(${canvasWidth}, 0)  scale(-1, 1)`}>
           <path d={line} />
         </g>
@@ -90,7 +109,7 @@ function BorgLine({ pts, cellSize, mirrorLeftRight, mirrorTopBottom }) {
         >
           <path d={line} />
         </g>
-      )} */}
+      )}
     </>
   );
 }
@@ -123,8 +142,6 @@ function makePath(pts) {
   for (let i = 1; i < pts.length; i++) {
     path += `L${pts[i].x}, ${pts[i].y}`;
   }
-
-  console.log("pts: ", pts);
 
   return path;
 }
