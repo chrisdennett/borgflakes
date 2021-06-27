@@ -15,12 +15,13 @@ export default function BorgflakeGenerator({ params }) {
     outerPadding,
     generate,
     maxRandomOffsetSize,
+    allowDiagonals,
   } = params;
 
   useEffect(() => {
     if (!gridPoints.length > 0) return;
 
-    const lines = generateBorglines({ gridPoints });
+    const lines = generateBorglines({ gridPoints, allowDiagonals });
     setBorgLines(lines);
 
     // eslint-disable-next-line
@@ -35,11 +36,19 @@ export default function BorgflakeGenerator({ params }) {
       cellSize,
       outerPadding,
       maxRandomOffsetSize,
+      allowDiagonals,
     });
     setGridPoints(pts);
 
     // eslint-disable-next-line
-  }, [canvasWidth, canvasHeight, cellSize, outerPadding, maxRandomOffsetSize]);
+  }, [
+    canvasWidth,
+    canvasHeight,
+    cellSize,
+    outerPadding,
+    maxRandomOffsetSize,
+    allowDiagonals,
+  ]);
 
   // render //
   const props = {

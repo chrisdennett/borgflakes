@@ -4,6 +4,7 @@ export function generateGridData({
   cellSize,
   outerPadding,
   maxRandomOffsetSize,
+  allowDiagonals,
 }) {
   const gridPoints = [];
   const drawWidth = canvasWidth - outerPadding * 2;
@@ -44,11 +45,12 @@ export function generateGridData({
       if (r !== 0) aboveIndex = currIndex - (cols + 1);
       if (r < rows) belowIndex = currIndex + (cols + 1);
 
-      if (c !== 0 && r !== 0) diagonalUpLeft = aboveIndex - 1;
-      if (c < cols && r !== 0) diagonalUpRight = aboveIndex + 1;
-
-      if (c !== 0 && r < rows) diagonalDownLeft = belowIndex - 1;
-      if (c < cols && r < rows) diagonalDownRight = belowIndex + 1;
+      if (allowDiagonals) {
+        if (c !== 0 && r !== 0) diagonalUpLeft = aboveIndex - 1;
+        if (c < cols && r !== 0) diagonalUpRight = aboveIndex + 1;
+        if (c !== 0 && r < rows) diagonalDownLeft = belowIndex - 1;
+        if (c < cols && r < rows) diagonalDownRight = belowIndex + 1;
+      }
 
       gridPoints.push({
         ...pt,
@@ -74,43 +76,49 @@ function getCopyOf(arr) {
   });
 }
 
-export function generateBorglines({ gridPoints }) {
+export function generateBorglines({ gridPoints, allowDiagonals }) {
   let pts = getCopyOf(gridPoints);
 
   const lines = [];
   const middlePt = pts.find((pt) => pt.isMiddlePt);
 
   const startPt = middlePt; //pts[getRandomInt({ max: gridPoints.length })];
-  let line = generateLine(startPt, pts);
+  let line = generateLine(startPt, pts, allowDiagonals);
   lines.push(line);
 
-  while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
-    line = generateLine(startPt, pts);
+  while (
+    getAvailableNextPts(startPt, pts, allowDiagonals).availablePts.length > 0
+  ) {
+    line = generateLine(startPt, pts, allowDiagonals);
     lines.push(line);
   }
 
   return lines;
 }
 
-function generateLine(startPt, pts) {
+function generateLine(startPt, pts, allowDiagonals) {
   const line = [startPt];
   startPt.isUsed = true;
 
-  let nextPt = getNextPt(startPt, pts);
+  let nextPt = getNextPt(startPt, pts, allowDiagonals);
   while (nextPt) {
     line.push(nextPt);
     nextPt.isUsed = true;
 
-    nextPt = getNextPt(nextPt, pts);
+    nextPt = getNextPt(nextPt, pts, allowDiagonals);
   }
 
   return line;
 }
 
-function getNextPt(pt, pts) {
+function getNextPt(pt, pts, allowDiagonals) {
   let nextPt = null;
 
-  const { availablePts, availableDirections } = getAvailableNextPts(pt, pts);
+  const { availablePts, availableDirections } = getAvailableNextPts(
+    pt,
+    pts,
+    allowDiagonals
+  );
   const possPts = availablePts;
 
   if (possPts.length > 0) {
@@ -122,7 +130,7 @@ function getNextPt(pt, pts) {
   return nextPt;
 }
 
-function getAvailableNextPts(pt, allPts) {
+function getAvailableNextPts(pt, allPts, allowDiagonals) {
   const {
     rightIndex,
     leftIndex,
@@ -156,6 +164,7 @@ function getAvailableNextPts(pt, allPts) {
     availableDirections.push("D");
   }
 
+  // if (allowDiagonals) {
   if (diagonalUpLeft && !allPts[diagonalUpLeft].isUsed) {
     availablePts.push(allPts[diagonalUpLeft]);
     availableDirections.push("1");
@@ -175,6 +184,7 @@ function getAvailableNextPts(pt, allPts) {
     availablePts.push(allPts[diagonalDownRight]);
     availableDirections.push("4");
   }
+  // }
 
   return { availablePts, availableDirections };
 }
