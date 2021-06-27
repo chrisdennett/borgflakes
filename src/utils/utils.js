@@ -31,6 +31,10 @@ export function generateGridData({
       let rightIndex = null;
       let aboveIndex = null;
       let belowIndex = null;
+      let diagonalUpLeft = null;
+      let diagonalUpRight = null;
+      let diagonalDownLeft = null;
+      let diagonalDownRight = null;
 
       const isMiddlePt =
         r === Math.round(rows / 2) && c === Math.round(cols / 2);
@@ -40,6 +44,12 @@ export function generateGridData({
       if (r !== 0) aboveIndex = currIndex - (cols + 1);
       if (r < rows) belowIndex = currIndex + (cols + 1);
 
+      if (c !== 0 && r !== 0) diagonalUpLeft = aboveIndex - 1;
+      if (c < cols && r !== 0) diagonalUpRight = aboveIndex + 1;
+
+      if (c !== 0 && r < rows) diagonalDownLeft = belowIndex - 1;
+      if (c < cols && r < rows) diagonalDownRight = belowIndex + 1;
+
       gridPoints.push({
         ...pt,
         leftIndex,
@@ -47,6 +57,10 @@ export function generateGridData({
         aboveIndex,
         belowIndex,
         isMiddlePt,
+        diagonalUpLeft,
+        diagonalUpRight,
+        diagonalDownLeft,
+        diagonalDownRight,
       });
     }
   }
@@ -109,7 +123,16 @@ function getNextPt(pt, pts) {
 }
 
 function getAvailableNextPts(pt, allPts) {
-  const { rightIndex, leftIndex, aboveIndex, belowIndex } = pt;
+  const {
+    rightIndex,
+    leftIndex,
+    aboveIndex,
+    belowIndex,
+    diagonalUpLeft,
+    diagonalUpRight,
+    diagonalDownLeft,
+    diagonalDownRight,
+  } = pt;
 
   const availablePts = [];
   const availableDirections = [];
@@ -131,6 +154,26 @@ function getAvailableNextPts(pt, allPts) {
   if (belowIndex && !allPts[belowIndex].isUsed) {
     availablePts.push(allPts[belowIndex]);
     availableDirections.push("D");
+  }
+
+  if (diagonalUpLeft && !allPts[diagonalUpLeft].isUsed) {
+    availablePts.push(allPts[diagonalUpLeft]);
+    availableDirections.push("1");
+  }
+
+  if (diagonalUpRight && !allPts[diagonalUpRight].isUsed) {
+    availablePts.push(allPts[diagonalUpRight]);
+    availableDirections.push("2");
+  }
+
+  if (diagonalDownLeft && !allPts[diagonalDownLeft].isUsed) {
+    availablePts.push(allPts[diagonalDownLeft]);
+    availableDirections.push("3");
+  }
+
+  if (diagonalDownRight && !allPts[diagonalDownRight].isUsed) {
+    availablePts.push(allPts[diagonalDownRight]);
+    availableDirections.push("4");
   }
 
   return { availablePts, availableDirections };
