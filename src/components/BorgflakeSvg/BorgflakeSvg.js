@@ -7,13 +7,9 @@ export default function BorgflakeSvg({
   bgColour,
   gridPoints,
   borgLines,
-  lineColour,
-  lineThickness,
   drawStartPt,
   drawGrid,
-  mirrorLeftRight,
-  mirrorTopBottom,
-  cellSize,
+  ...rest
 }) {
   return (
     <svg
@@ -28,30 +24,18 @@ export default function BorgflakeSvg({
         height={canvasHeight}
         fill={bgColour}
       />
-      ;
+
       {drawGrid &&
         gridPoints.map((pt, i) => (
           <circle key={i} fill="white" cx={pt.x} cy={pt.y} r={1} />
         ))}
+
       {borgLines.map((line, i) => (
-        <g
-          key={`line-${i}`}
-          fill="none"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          stroke={lineColour}
-          strokeWidth={lineThickness}
-        >
-          <BorgLine
-            pts={line}
-            cellSize={cellSize}
-            mirrorLeftRight={mirrorLeftRight}
-            mirrorTopBottom={mirrorTopBottom}
-            canvasWidth={canvasWidth}
-            canvasHeight={canvasHeight}
-          />
+        <g key={`line-${i}`}>
+          <BorgLine pts={line} {...{ ...rest, canvasHeight, canvasWidth }} />
         </g>
       ))}
+
       {borgLines.length > 0 && drawStartPt && (
         <>
           <circle
@@ -83,22 +67,58 @@ function BorgLine({
   mirrorTopBottom,
   canvasWidth,
   canvasHeight,
+  outline1,
+  outline2,
+  outline3,
+  outline4,
+  outline1Colour,
+  outline2Colour,
+  outline3Colour,
+  outline4Colour,
+  lineThickness,
+  lineColour,
 }) {
   const line = makePath(pts, cellSize);
 
   return (
-    <>
-      <path d={line} stroke="red" strokeWidth="8" />
+    <g
+      fill="none"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      stroke={lineColour}
+      strokeWidth={lineThickness}
+    >
+      {outline1 && (
+        <path
+          d={line}
+          stroke={outline1Colour}
+          strokeWidth={lineThickness * 3}
+        />
+      )}
       <path d={line} />
 
       {mirrorLeftRight && (
         <g transform={`translate(${canvasWidth}, 0)  scale(-1, 1)`}>
+          {outline2 && (
+            <path
+              d={line}
+              stroke={outline2Colour}
+              strokeWidth={lineThickness * 3}
+            />
+          )}
           <path d={line} />
         </g>
       )}
 
       {mirrorTopBottom && (
         <g transform={`translate(0, ${canvasHeight})  scale(1, -1)`}>
+          {outline3 && (
+            <path
+              d={line}
+              stroke={outline3Colour}
+              strokeWidth={lineThickness * 3}
+            />
+          )}
           <path d={line} />
         </g>
       )}
@@ -107,33 +127,18 @@ function BorgLine({
         <g
           transform={`translate(${canvasWidth},${canvasHeight})  scale(-1, -1)`}
         >
+          {outline4 && (
+            <path
+              d={line}
+              stroke={outline4Colour}
+              strokeWidth={lineThickness * 3}
+            />
+          )}
           <path d={line} />
         </g>
       )}
-    </>
+    </g>
   );
-}
-
-function makePathFromDirection(pts, cellSize) {
-  let path = `M${pts[0].x}, ${pts[0].y}`;
-  let pos = { x: pts[0].x, y: pts[0].y };
-
-  for (let i = 1; i < pts.length; i++) {
-    const { direction } = pts[i];
-    let moveX = 0;
-    let moveY = 0;
-    if (direction === "L") moveX = -cellSize;
-    if (direction === "R") moveX = cellSize;
-    if (direction === "U") moveY = -cellSize;
-    if (direction === "D") moveY = cellSize;
-
-    pos.x += moveX;
-    pos.y += moveY;
-
-    path += `L${pos.x}, ${pos.y}`;
-  }
-
-  return path;
 }
 
 function makePath(pts) {
@@ -145,3 +150,25 @@ function makePath(pts) {
 
   return path;
 }
+
+// function makePathFromDirection(pts, cellSize) {
+//   let path = `M${pts[0].x}, ${pts[0].y}`;
+//   let pos = { x: pts[0].x, y: pts[0].y };
+
+//   for (let i = 1; i < pts.length; i++) {
+//     const { direction } = pts[i];
+//     let moveX = 0;
+//     let moveY = 0;
+//     if (direction === "L") moveX = -cellSize;
+//     if (direction === "R") moveX = cellSize;
+//     if (direction === "U") moveY = -cellSize;
+//     if (direction === "D") moveY = cellSize;
+
+//     pos.x += moveX;
+//     pos.y += moveY;
+
+//     path += `L${pos.x}, ${pos.y}`;
+//   }
+
+//   return path;
+// }

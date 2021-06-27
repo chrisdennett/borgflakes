@@ -13,6 +13,14 @@ export default function BorgflakeCanvas({
   drawGrid,
   mirrorLeftRight,
   mirrorTopBottom,
+  outline1,
+  outline2,
+  outline3,
+  outline4,
+  outline1Colour,
+  outline2Colour,
+  outline3Colour,
+  outline4Colour,
 }) {
   const canvasRef = useRef(null);
 
@@ -43,23 +51,38 @@ export default function BorgflakeCanvas({
     ctx.strokeStyle = lineColour;
     ctx.lineWidth = lineThickness;
 
+    const outlineThickness = lineThickness * 3;
+
+    if (outline1) {
+      drawLines(ctx, borgLines, outlineThickness, outline1Colour);
+    }
     drawLines(ctx, borgLines);
 
     if (mirrorLeftRight) {
       ctx.translate(canvasWidth, 0);
       ctx.scale(-1, 1);
+
+      if (outline2) {
+        drawLines(ctx, borgLines, outlineThickness, outline2Colour);
+      }
       drawLines(ctx, borgLines);
     }
 
     if (mirrorTopBottom) {
       ctx.translate(0, canvasHeight);
       ctx.scale(1, -1);
+      if (outline3) {
+        drawLines(ctx, borgLines, outlineThickness, outline3Colour);
+      }
       drawLines(ctx, borgLines);
     }
 
     if (mirrorLeftRight) {
       ctx.translate(canvasWidth, 0);
       ctx.scale(-1, 1);
+      if (outline4) {
+        drawLines(ctx, borgLines, outlineThickness, outline4Colour);
+      }
       drawLines(ctx, borgLines);
     }
 
@@ -74,10 +97,13 @@ export default function BorgflakeCanvas({
   return <canvas ref={canvasRef} className={styles.borgflakeCanvas} />;
 }
 
-const drawLines = (ctx, borgLines) => {
+const drawLines = (ctx, borgLines, lineThickness, lineColour) => {
+  ctx.save();
+  if (lineColour) ctx.strokeStyle = lineColour;
+  if (lineThickness) ctx.lineWidth = lineThickness;
+
   for (let line of borgLines) {
     const linePts = line;
-
     ctx.beginPath();
     ctx.moveTo(linePts[0].x, linePts[0].y);
     for (let i = 1; i < linePts.length; i++) {
@@ -85,4 +111,5 @@ const drawLines = (ctx, borgLines) => {
     }
     ctx.stroke();
   }
+  ctx.restore();
 };
