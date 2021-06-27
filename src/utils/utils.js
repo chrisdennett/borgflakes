@@ -44,18 +44,24 @@ export function generateGridData({
   return gridPoints;
 }
 
+function getCopyOf(arr) {
+  return arr.map((obj) => {
+    return { ...obj };
+  });
+}
+
 export function generateBorglines({ gridPoints }) {
-  let pts = [...gridPoints];
+  let pts = getCopyOf(gridPoints);
 
   const lines = [];
-  const middlePt = gridPoints.find((pt) => pt.isMiddlePt);
+  const middlePt = pts.find((pt) => pt.isMiddlePt);
 
   const startPt = middlePt; //pts[getRandomInt({ max: gridPoints.length })];
-  let line = generateLine(startPt, gridPoints);
+  let line = generateLine(startPt, pts);
   lines.push(line);
 
   while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
-    line = generateLine(startPt, gridPoints);
+    line = generateLine(startPt, pts);
     lines.push(line);
   }
 

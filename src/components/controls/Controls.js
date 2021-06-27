@@ -74,6 +74,11 @@ export default function Controls({ showControls = true, onChange }) {
     },
 
     Lines: folder({
+      bgColour: {
+        value: "#333",
+        onChange: (value) => setQuery({ bgColour: value }),
+      },
+
       lineColour: {
         value: "#dedede",
         onChange: (value) => setQuery({ lineColour: value }),
@@ -130,12 +135,7 @@ export default function Controls({ showControls = true, onChange }) {
       },
     }),
 
-    Canvas: folder({
-      bgColour: {
-        value: "#333",
-        onChange: (value) => setQuery({ bgColour: value }),
-      },
-
+    Canvas_WILL_REGENERATE_LINE: folder({
       canvasWidth: {
         value: 800,
         step: 1,
