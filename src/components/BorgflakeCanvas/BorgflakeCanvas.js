@@ -11,6 +11,8 @@ export default function BorgflakeCanvas({
   lineThickness,
   drawStartPt,
   drawGrid,
+  mirrorLeftRight,
+  mirrorTopBottom,
 }) {
   const canvasRef = useRef(null);
 
@@ -42,20 +44,29 @@ export default function BorgflakeCanvas({
     ctx.lineWidth = lineThickness;
 
     drawLines(ctx, borgLines);
-    ctx.translate(canvasWidth, 0);
-    ctx.scale(-1, 1);
-    drawLines(ctx, borgLines);
-    ctx.translate(0, canvasHeight);
-    ctx.scale(1, -1);
-    drawLines(ctx, borgLines);
-    ctx.translate(canvasWidth, 0);
-    ctx.scale(-1, 1);
-    drawLines(ctx, borgLines);
+
+    if (mirrorLeftRight) {
+      ctx.translate(canvasWidth, 0);
+      ctx.scale(-1, 1);
+      drawLines(ctx, borgLines);
+    }
+
+    if (mirrorTopBottom) {
+      ctx.translate(0, canvasHeight);
+      ctx.scale(1, -1);
+      drawLines(ctx, borgLines);
+    }
+
+    if (mirrorLeftRight) {
+      ctx.translate(canvasWidth, 0);
+      ctx.scale(-1, 1);
+      drawLines(ctx, borgLines);
+    }
 
     if (borgLines.length > 0 && drawStartPt) {
       ctx.beginPath();
       ctx.fillStyle = "green";
-      ctx.arc(borgLines[0][0].x - 3, borgLines[0][0].y - 3, 6, 0, 2 * Math.PI);
+      ctx.arc(borgLines[0][0].x, borgLines[0][0].y, 6, 0, 2 * Math.PI);
       ctx.fill();
     }
   });

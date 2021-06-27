@@ -1,12 +1,22 @@
-export function generateGridData({ canvasWidth, canvasHeight, cellSize }) {
+export function generateGridData({
+  canvasWidth,
+  canvasHeight,
+  cellSize,
+  outerPadding,
+}) {
   const gridPoints = [];
-  const cols = Math.ceil(canvasWidth / cellSize);
-  const rows = Math.ceil(canvasHeight / cellSize);
+  const drawWidth = canvasWidth - outerPadding * 2;
+  const drawHeight = canvasHeight - outerPadding * 2;
+  const cols = Math.ceil(drawWidth / cellSize);
+  const rows = Math.ceil(drawHeight / cellSize);
 
   for (let r = 0; r <= rows; r++) {
     for (let c = 0; c <= cols; c++) {
       const currIndex = gridPoints.length;
-      const pt = { x: c * cellSize, y: r * cellSize };
+      const pt = {
+        x: outerPadding + c * cellSize,
+        y: outerPadding + r * cellSize,
+      };
       let leftIndex = null;
       let rightIndex = null;
       let aboveIndex = null;
@@ -44,7 +54,7 @@ export function generateBorglines({ gridPoints }) {
   let line = generateLine(startPt, gridPoints);
   lines.push(line);
 
-  while (getAvailableNextPts(startPt, pts).length > 0) {
+  while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
     line = generateLine(startPt, gridPoints);
     lines.push(line);
   }
@@ -70,11 +80,13 @@ function generateLine(startPt, pts) {
 function getNextPt(pt, pts) {
   let nextPt = null;
 
-  const possPts = getAvailableNextPts(pt, pts);
+  const { availablePts, availableDirections } = getAvailableNextPts(pt, pts);
+  const possPts = availablePts;
 
   if (possPts.length > 0) {
     const randInt = getRandomInt({ max: possPts.length - 1 });
     nextPt = possPts[randInt];
+    nextPt.direction = availableDirections[randInt];
   }
 
   return nextPt;
@@ -84,23 +96,28 @@ function getAvailableNextPts(pt, allPts) {
   const { rightIndex, leftIndex, aboveIndex, belowIndex } = pt;
 
   const availablePts = [];
+  const availableDirections = [];
   if (rightIndex && !allPts[rightIndex].isUsed) {
     availablePts.push(allPts[rightIndex]);
+    availableDirections.push("R");
   }
 
   if (leftIndex && !allPts[leftIndex].isUsed) {
     availablePts.push(allPts[leftIndex]);
+    availableDirections.push("L");
   }
 
   if (aboveIndex && !allPts[aboveIndex].isUsed) {
     availablePts.push(allPts[aboveIndex]);
+    availableDirections.push("U");
   }
 
   if (belowIndex && !allPts[belowIndex].isUsed) {
     availablePts.push(allPts[belowIndex]);
+    availableDirections.push("D");
   }
 
-  return availablePts;
+  return { availablePts, availableDirections };
 }
 
 function getRandomInt({ min = 0, max = 10 }) {

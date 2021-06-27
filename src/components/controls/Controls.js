@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import { useHistory } from "react-router-dom";
 import { button, folder, Leva, useControls } from "leva";
 import {
   useQueryParams,
@@ -6,6 +7,9 @@ import {
   StringParam,
   NumberParam,
 } from "use-query-params";
+
+const defaultValsPath =
+  "?bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawCanvas=0&drawGrid=0&drawStartPt=0&drawSvg=1&lineColour=%23dedede&lineThickness=3&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=40";
 
 export default function Controls({ showControls = true, onChange }) {
   const [query, setQuery] = useQueryParams({
@@ -22,20 +26,24 @@ export default function Controls({ showControls = true, onChange }) {
     canvasHeight: NumberParam,
     cellSize: NumberParam,
     lineThickness: NumberParam,
+    outerPadding: NumberParam,
   });
+  let history = useHistory();
 
   const [values, set] = useControls(() => ({
     generate: button(() => setQuery({ generate: Date.now() })),
 
-    drawSvg: {
-      value: false,
-      onChange: (value) => setQuery({ drawSvg: value }),
-    },
+    outputType: folder({
+      drawSvg: {
+        value: true,
+        onChange: (value) => setQuery({ drawSvg: value }),
+      },
 
-    drawCanvas: {
-      value: false,
-      onChange: (value) => setQuery({ drawCanvas: value }),
-    },
+      drawCanvas: {
+        value: false,
+        onChange: (value) => setQuery({ drawCanvas: value }),
+      },
+    }),
 
     drawGrid: {
       value: false,
@@ -43,12 +51,12 @@ export default function Controls({ showControls = true, onChange }) {
     },
 
     mirrorLeftRight: {
-      value: false,
+      value: true,
       onChange: (value) => setQuery({ mirrorLeftRight: value }),
     },
 
     mirrorTopBottom: {
-      value: false,
+      value: true,
       onChange: (value) => setQuery({ mirrorTopBottom: value }),
     },
 
@@ -57,26 +65,27 @@ export default function Controls({ showControls = true, onChange }) {
       onChange: (value) => setQuery({ drawStartPt: value }),
     },
 
-    Colours: folder({
+    Lines: folder({
+      lineColour: {
+        value: "#dedede",
+        onChange: (value) => setQuery({ lineColour: value }),
+      },
+
+      lineThickness: {
+        value: 3,
+        step: 1,
+        min: 0.2,
+        max: 20,
+        onChange: (value) => setQuery({ lineThickness: value }),
+      },
+    }),
+
+    Canvas: folder({
       bgColour: {
         value: "#333",
         onChange: (value) => setQuery({ bgColour: value }),
       },
-      lineColour: {
-        value: "#fff",
-        onChange: (value) => setQuery({ lineColour: value }),
-      },
-    }),
 
-    lineThickness: {
-      value: 1,
-      step: 1,
-      min: 0.2,
-      max: 20,
-      onChange: (value) => setQuery({ lineThickness: value }),
-    },
-
-    CanvasSize: folder({
       canvasWidth: {
         value: 800,
         step: 1,
@@ -99,7 +108,17 @@ export default function Controls({ showControls = true, onChange }) {
         max: 100,
         onChange: (value) => setQuery({ cellSize: value }),
       },
+
+      outerPadding: {
+        value: 40,
+        step: 2,
+        min: 0,
+        max: 200,
+        onChange: (value) => setQuery({ outerPadding: value }),
+      },
     }),
+
+    reset: button(() => history.push(`/${defaultValsPath}`)),
   }));
 
   useEffect(() => {
