@@ -94,7 +94,13 @@ export default function BorgflakeCanvas({
     }
   });
 
-  return <canvas ref={canvasRef} className={styles.borgflakeCanvas} />;
+  return (
+    <canvas
+      id="borgFlakeCanvas"
+      ref={canvasRef}
+      className={styles.borgflakeCanvas}
+    />
+  );
 }
 
 const drawLines = (ctx, borgLines, lineThickness, lineColour) => {

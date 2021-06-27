@@ -9,13 +9,17 @@ import {
 } from "use-query-params";
 
 const defaultValsPath =
-  "?bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawCanvas=0&drawGrid=0&drawStartPt=0&drawSvg=1&lineColour=%23dedede&lineThickness=3&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=40&outline1=1&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000";
+  "?bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&lineColour=%23dedede&lineThickness=3&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=40&outline1=1&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
 
-export default function Controls({ showControls = true, onChange }) {
+export default function Controls({
+  showControls = true,
+  onChange,
+  onSaveSvg,
+  onSaveCanvas,
+}) {
   const [query, setQuery] = useQueryParams({
     generate: StringParam,
-    drawCanvas: BooleanParam,
-    drawSvg: BooleanParam,
+    outputType: StringParam,
     drawGrid: BooleanParam,
     mirrorLeftRight: BooleanParam,
     mirrorTopBottom: BooleanParam,
@@ -41,37 +45,47 @@ export default function Controls({ showControls = true, onChange }) {
   const [values, set] = useControls(() => ({
     generate: button(() => setQuery({ generate: Date.now() })),
 
-    outputType: folder({
-      drawSvg: {
-        value: true,
-        onChange: (value) => setQuery({ drawSvg: value }),
+    outputType: {
+      value: "svg",
+      options: ["svg", "canvas"],
+      onChange: (option) => setQuery({ outputType: option }),
+    },
+
+    saveSVG: folder(
+      {
+        Save_SVG: button(onSaveSvg),
+      },
+      { render: (get) => get("outputType") === "svg" }
+    ),
+
+    saveCANVAS: folder(
+      {
+        Save_CANVAS: button(onSaveCanvas),
+      },
+      { render: (get) => get("outputType") === "canvas" }
+    ),
+
+    path_options: folder({
+      drawGrid: {
+        value: false,
+        onChange: (value) => setQuery({ drawGrid: value }),
       },
 
-      drawCanvas: {
+      mirrorLeftRight: {
+        value: true,
+        onChange: (value) => setQuery({ mirrorLeftRight: value }),
+      },
+
+      mirrorTopBottom: {
+        value: true,
+        onChange: (value) => setQuery({ mirrorTopBottom: value }),
+      },
+
+      drawStartPt: {
         value: false,
-        onChange: (value) => setQuery({ drawCanvas: value }),
+        onChange: (value) => setQuery({ drawStartPt: value }),
       },
     }),
-
-    drawGrid: {
-      value: false,
-      onChange: (value) => setQuery({ drawGrid: value }),
-    },
-
-    mirrorLeftRight: {
-      value: true,
-      onChange: (value) => setQuery({ mirrorLeftRight: value }),
-    },
-
-    mirrorTopBottom: {
-      value: true,
-      onChange: (value) => setQuery({ mirrorTopBottom: value }),
-    },
-
-    drawStartPt: {
-      value: false,
-      onChange: (value) => setQuery({ drawStartPt: value }),
-    },
 
     Lines: folder({
       bgColour: {
@@ -135,7 +149,7 @@ export default function Controls({ showControls = true, onChange }) {
       },
     }),
 
-    Canvas_WILL_REGENERATE_LINE: folder({
+    Canvas_CHANGES_WILL_REGENERATE_LINE: folder({
       canvasWidth: {
         value: 800,
         step: 1,

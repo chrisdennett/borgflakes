@@ -5,6 +5,7 @@
   "keywords": [],
   "main": "src/index.js",
   "dependencies": {
+    "file-saver": "^2.0.5",
     "leva": "^0.9.9",
     "query-string": "^7.0.0",
     "react": "17.0.2",

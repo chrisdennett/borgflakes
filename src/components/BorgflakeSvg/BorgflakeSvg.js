@@ -12,51 +12,55 @@ export default function BorgflakeSvg({
   ...rest
 }) {
   return (
-    <svg
-      viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
-      style={{ maxHeight: canvasHeight, maxWidth: canvasWidth }}
-      className={styles.borgflakeSvg}
-    >
-      <rect
-        x={0}
-        y={0}
-        width={canvasWidth}
-        height={canvasHeight}
-        fill={bgColour}
-      />
+    <div id="svgHolder">
+      <svg
+        id="svg"
+        viewBox={`0 0 ${canvasWidth} ${canvasHeight}`}
+        xmlns="http://www.w3.org/2000/svg"
+        style={{ maxHeight: canvasHeight, maxWidth: canvasWidth }}
+        className={styles.borgflakeSvg}
+      >
+        <rect
+          x={0}
+          y={0}
+          width={canvasWidth}
+          height={canvasHeight}
+          fill={bgColour}
+        />
 
-      {drawGrid &&
-        gridPoints.map((pt, i) => (
-          <circle key={i} fill="white" cx={pt.x} cy={pt.y} r={1} />
+        {drawGrid &&
+          gridPoints.map((pt, i) => (
+            <circle key={i} fill="white" cx={pt.x} cy={pt.y} r={1} />
+          ))}
+
+        {borgLines.map((line, i) => (
+          <g key={`line-${i}`}>
+            <BorgLine pts={line} {...{ ...rest, canvasHeight, canvasWidth }} />
+          </g>
         ))}
 
-      {borgLines.map((line, i) => (
-        <g key={`line-${i}`}>
-          <BorgLine pts={line} {...{ ...rest, canvasHeight, canvasWidth }} />
-        </g>
-      ))}
-
-      {borgLines.length > 0 && drawStartPt && (
-        <>
-          <circle
-            stroke="white"
-            strokeWidth="6"
-            fill="none"
-            cx={borgLines[0][0].x}
-            cy={borgLines[0][0].y}
-            r={6}
-          />
-          <circle
-            stroke="green"
-            strokeWidth="2"
-            fill="none"
-            cx={borgLines[0][0].x}
-            cy={borgLines[0][0].y}
-            r={6}
-          />
-        </>
-      )}
-    </svg>
+        {borgLines.length > 0 && drawStartPt && (
+          <>
+            <circle
+              stroke="white"
+              strokeWidth="6"
+              fill="none"
+              cx={borgLines[0][0].x}
+              cy={borgLines[0][0].y}
+              r={6}
+            />
+            <circle
+              stroke="green"
+              strokeWidth="2"
+              fill="none"
+              cx={borgLines[0][0].x}
+              cy={borgLines[0][0].y}
+              r={6}
+            />
+          </>
+        )}
+      </svg>
+    </div>
   );
 }
 

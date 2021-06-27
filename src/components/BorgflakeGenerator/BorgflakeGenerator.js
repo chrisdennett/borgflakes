@@ -43,15 +43,15 @@ export default function BorgflakeGenerator({ params }) {
 
   return (
     <div className={styles.borgflakeGenerator}>
-      {props.drawCanvas && (
+      {props.outputType === "svg" && (
         <div className={styles.flakeHolder}>
-          <BorgflakeCanvas {...props} />
+          <BorgflakeSvg {...props} />
         </div>
       )}
 
-      {props.drawSvg && (
+      {props.outputType === "canvas" && (
         <div className={styles.flakeHolder}>
-          <BorgflakeSvg {...props} />
+          <BorgflakeCanvas {...props} />
         </div>
       )}
     </div>
