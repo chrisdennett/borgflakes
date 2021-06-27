@@ -9,7 +9,7 @@ import {
 } from "use-query-params";
 
 const defaultValsPath =
-  "?bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&lineColour=%23dedede&lineThickness=3&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=40&outline1=1&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
+  "?bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&generate=1624827080631&lineColour=%23dedede&lineThickness=3&maxRandomOffsetSize=0.08&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=40&outline1=1&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
 
 export default function Controls({
   showControls = true,
@@ -39,6 +39,7 @@ export default function Controls({
     outline2Colour: StringParam,
     outline3Colour: StringParam,
     outline4Colour: StringParam,
+    maxRandomOffsetSize: NumberParam,
   });
   let history = useHistory();
 
@@ -149,7 +150,14 @@ export default function Controls({
       },
     }),
 
-    Canvas_CHANGES_WILL_REGENERATE_LINE: folder({
+    CHANGING_THESE_WILL_REGENERATE_LINE: folder({
+      maxRandomOffsetSize: {
+        value: 0,
+        step: 0.01,
+        min: 0,
+        max: 2,
+        onChange: (value) => setQuery({ maxRandomOffsetSize: value }),
+      },
       canvasWidth: {
         value: 800,
         step: 1,

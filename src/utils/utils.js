@@ -3,6 +3,7 @@ export function generateGridData({
   canvasHeight,
   cellSize,
   outerPadding,
+  maxRandomOffsetSize,
 }) {
   const gridPoints = [];
   const drawWidth = canvasWidth - outerPadding * 2;
@@ -13,9 +14,18 @@ export function generateGridData({
   for (let r = 0; r <= rows; r++) {
     for (let c = 0; c <= cols; c++) {
       const currIndex = gridPoints.length;
+      const randX = getRandomInt({
+        min: 0,
+        max: maxRandomOffsetSize * cellSize,
+      });
+      const randY = getRandomInt({
+        min: 0,
+        max: maxRandomOffsetSize * cellSize,
+      });
+
       const pt = {
-        x: outerPadding + c * cellSize,
-        y: outerPadding + r * cellSize,
+        x: randX + outerPadding + c * cellSize,
+        y: randY + outerPadding + r * cellSize,
       };
       let leftIndex = null;
       let rightIndex = null;

@@ -8,8 +8,14 @@ export default function BorgflakeGenerator({ params }) {
   const [gridPoints, setGridPoints] = useState([]);
   const [borgLines, setBorgLines] = useState([]);
 
-  const { canvasWidth, canvasHeight, cellSize, outerPadding, generate } =
-    params;
+  const {
+    canvasWidth,
+    canvasHeight,
+    cellSize,
+    outerPadding,
+    generate,
+    maxRandomOffsetSize,
+  } = params;
 
   useEffect(() => {
     if (!gridPoints.length > 0) return;
@@ -28,11 +34,12 @@ export default function BorgflakeGenerator({ params }) {
       canvasHeight,
       cellSize,
       outerPadding,
+      maxRandomOffsetSize,
     });
     setGridPoints(pts);
 
     // eslint-disable-next-line
-  }, [canvasWidth, canvasHeight, cellSize, outerPadding]);
+  }, [canvasWidth, canvasHeight, cellSize, outerPadding, maxRandomOffsetSize]);
 
   // render //
   const props = {
