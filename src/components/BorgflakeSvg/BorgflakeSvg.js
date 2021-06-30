@@ -11,6 +11,8 @@ export default function BorgflakeSvg({
   drawGrid,
   ...rest
 }) {
+  let startPt = gridPoints.find((pt) => pt.isMiddlePt);
+
   return (
     <div id="svgHolder">
       <svg
@@ -35,7 +37,10 @@ export default function BorgflakeSvg({
 
         {borgLines.map((line, i) => (
           <g key={`line-${i}`}>
-            <BorgLine pts={line} {...{ ...rest, canvasHeight, canvasWidth }} />
+            <BorgLine
+              pts={line}
+              {...{ ...rest, canvasHeight, canvasWidth, gridPoints }}
+            />
           </g>
         ))}
 
@@ -45,16 +50,16 @@ export default function BorgflakeSvg({
               stroke="white"
               strokeWidth="6"
               fill="none"
-              cx={borgLines[0][0].x}
-              cy={borgLines[0][0].y}
+              cx={startPt.x}
+              cy={startPt.y}
               r={6}
             />
             <circle
               stroke="green"
               strokeWidth="2"
               fill="none"
-              cx={borgLines[0][0].x}
-              cy={borgLines[0][0].y}
+              cx={startPt.x}
+              cy={startPt.y}
               r={6}
             />
           </>
@@ -66,7 +71,6 @@ export default function BorgflakeSvg({
 
 function BorgLine({
   pts,
-  cellSize,
   mirrorLeftRight,
   mirrorTopBottom,
   canvasWidth,
@@ -81,8 +85,9 @@ function BorgLine({
   outline4Colour,
   lineThickness,
   lineColour,
+  gridPoints,
 }) {
-  const line = makePath(pts, cellSize);
+  const line = makePathFromDirections(pts, gridPoints);
 
   return (
     <g
@@ -145,34 +150,57 @@ function BorgLine({
   );
 }
 
-function makePath(pts) {
-  let path = `M${pts[0].x}, ${pts[0].y}`;
+// function makePath(pts) {
+//   let path = `M${pts[0].x}, ${pts[0].y}`;
 
-  for (let i = 1; i < pts.length; i++) {
-    path += `L${pts[i].x}, ${pts[i].y}`;
+//   for (let i = 1; i < pts.length; i++) {
+//     path += `L${pts[i].x}, ${pts[i].y}`;
+//   }
+
+//   return path;
+// }
+
+function makePathFromDirections(directions, gridPts) {
+  if (!gridPts || gridPts.length === 0) return null;
+
+  let currPoint = gridPts.find((pt) => pt.isMiddlePt);
+
+  let path = `M${currPoint.x}, ${currPoint.y}`;
+
+  for (let currDirection of directions) {
+    let nextPtIndex = getIndexFromDirection(currDirection, currPoint);
+
+    if (nextPtIndex && nextPtIndex >= 0 && nextPtIndex < gridPts.length) {
+      currPoint = gridPts[nextPtIndex];
+      path += `L${currPoint.x}, ${currPoint.y}`;
+    }
   }
 
   return path;
 }
 
-// function makePathFromDirection(pts, cellSize) {
-//   let path = `M${pts[0].x}, ${pts[0].y}`;
-//   let pos = { x: pts[0].x, y: pts[0].y };
+export function getIndexFromDirection(direction, pt) {
+  let nextPtIndex = null;
 
-//   for (let i = 1; i < pts.length; i++) {
-//     const { direction } = pts[i];
-//     let moveX = 0;
-//     let moveY = 0;
-//     if (direction === "L") moveX = -cellSize;
-//     if (direction === "R") moveX = cellSize;
-//     if (direction === "U") moveY = -cellSize;
-//     if (direction === "D") moveY = cellSize;
+  if (direction === "L") {
+    nextPtIndex = pt.leftIndex;
+  } else if (direction === "R") {
+    nextPtIndex = pt.rightIndex;
+  } else if (direction === "U") {
+    nextPtIndex = pt.aboveIndex;
+  } else if (direction === "D") {
+    nextPtIndex = pt.belowIndex;
+  } else if (direction === "UL") {
+    nextPtIndex = pt.diagonalUpLeft;
+  } else if (direction === "UR") {
+    nextPtIndex = pt.diagonalUpRight;
+  } else if (direction === "DL") {
+    nextPtIndex = pt.diagonalDownLeft;
+  } else if (direction === "DR") {
+    nextPtIndex = pt.diagonalUpRight;
+  } else {
+    console.log("direction NOT FOUND: ", direction);
+  }
 
-//     pos.x += moveX;
-//     pos.y += moveY;
-
-//     path += `L${pos.x}, ${pos.y}`;
-//   }
-
-//   return path;
-// }
+  return nextPtIndex;
+}

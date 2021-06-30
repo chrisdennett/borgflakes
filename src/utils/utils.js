@@ -76,6 +76,7 @@ function getCopyOf(arr) {
   });
 }
 
+// Draws as many lines from starting point as poss.
 export function generateBorglines({ gridPoints, allowDiagonals }) {
   let pts = getCopyOf(gridPoints);
 
@@ -86,9 +87,7 @@ export function generateBorglines({ gridPoints, allowDiagonals }) {
   let line = generateLine(startPt, pts, allowDiagonals);
   lines.push(line);
 
-  while (
-    getAvailableNextPts(startPt, pts, allowDiagonals).availablePts.length > 0
-  ) {
+  while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
     line = generateLine(startPt, pts, allowDiagonals);
     lines.push(line);
   }
@@ -96,13 +95,14 @@ export function generateBorglines({ gridPoints, allowDiagonals }) {
   return lines;
 }
 
+// create a line going in random directions until blocked on all
 function generateLine(startPt, pts, allowDiagonals) {
-  const line = [startPt];
+  const line = [];
   startPt.isUsed = true;
 
   let nextPt = getNextPt(startPt, pts, allowDiagonals);
   while (nextPt) {
-    line.push(nextPt);
+    line.push(nextPt.direction);
     nextPt.isUsed = true;
 
     nextPt = getNextPt(nextPt, pts, allowDiagonals);
@@ -111,14 +111,10 @@ function generateLine(startPt, pts, allowDiagonals) {
   return line;
 }
 
-function getNextPt(pt, pts, allowDiagonals) {
+function getNextPt(pt, pts) {
   let nextPt = null;
 
-  const { availablePts, availableDirections } = getAvailableNextPts(
-    pt,
-    pts,
-    allowDiagonals
-  );
+  const { availablePts, availableDirections } = getAvailableNextPts(pt, pts);
   const possPts = availablePts;
 
   if (possPts.length > 0) {
@@ -130,7 +126,7 @@ function getNextPt(pt, pts, allowDiagonals) {
   return nextPt;
 }
 
-function getAvailableNextPts(pt, allPts, allowDiagonals) {
+function getAvailableNextPts(pt, allPts) {
   const {
     rightIndex,
     leftIndex,
@@ -167,22 +163,22 @@ function getAvailableNextPts(pt, allPts, allowDiagonals) {
   // if (allowDiagonals) {
   if (diagonalUpLeft && !allPts[diagonalUpLeft].isUsed) {
     availablePts.push(allPts[diagonalUpLeft]);
-    availableDirections.push("1");
+    availableDirections.push("UL");
   }
 
   if (diagonalUpRight && !allPts[diagonalUpRight].isUsed) {
     availablePts.push(allPts[diagonalUpRight]);
-    availableDirections.push("2");
+    availableDirections.push("UR");
   }
 
   if (diagonalDownLeft && !allPts[diagonalDownLeft].isUsed) {
     availablePts.push(allPts[diagonalDownLeft]);
-    availableDirections.push("3");
+    availableDirections.push("DL");
   }
 
   if (diagonalDownRight && !allPts[diagonalDownRight].isUsed) {
     availablePts.push(allPts[diagonalDownRight]);
-    availableDirections.push("4");
+    availableDirections.push("DR");
   }
   // }
 

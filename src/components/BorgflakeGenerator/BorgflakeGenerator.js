@@ -24,6 +24,8 @@ export default function BorgflakeGenerator({ params }) {
     const lines = generateBorglines({ gridPoints, allowDiagonals });
     setBorgLines(lines);
 
+    // console.log("gridPoints: ", gridPoints);
+
     // eslint-disable-next-line
   }, [generate, gridPoints]);
 

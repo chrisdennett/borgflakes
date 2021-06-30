@@ -1,4 +1,5 @@
 import { useEffect, useRef } from "react";
+import { getIndexFromDirection } from "../BorgflakeSvg/BorgflakeSvg";
 import styles from "./BorgflakeCanvas.module.css";
 
 export default function BorgflakeCanvas({
@@ -54,18 +55,18 @@ export default function BorgflakeCanvas({
     const outlineThickness = lineThickness * 3;
 
     if (outline1) {
-      drawLines(ctx, borgLines, outlineThickness, outline1Colour);
+      drawLines(ctx, gridPoints, borgLines, outlineThickness, outline1Colour);
     }
-    drawLines(ctx, borgLines);
+    drawLines(ctx, gridPoints, borgLines);
 
     if (mirrorLeftRight) {
       ctx.translate(canvasWidth, 0);
       ctx.scale(-1, 1);
 
       if (outline2) {
-        drawLines(ctx, borgLines, outlineThickness, outline2Colour);
+        drawLines(ctx, gridPoints, borgLines, outlineThickness, outline2Colour);
       }
-      drawLines(ctx, borgLines);
+      drawLines(ctx, gridPoints, borgLines);
     }
 
     if (mirrorTopBottom) {
@@ -74,23 +75,31 @@ export default function BorgflakeCanvas({
       if (outline3) {
         drawLines(ctx, borgLines, outlineThickness, outline3Colour);
       }
-      drawLines(ctx, borgLines);
+      drawLines(ctx, gridPoints, borgLines);
     }
 
     if (mirrorLeftRight) {
       ctx.translate(canvasWidth, 0);
       ctx.scale(-1, 1);
       if (outline4) {
-        drawLines(ctx, borgLines, outlineThickness, outline4Colour);
+        drawLines(ctx, gridPoints, borgLines, outlineThickness, outline4Colour);
       }
-      drawLines(ctx, borgLines);
+      drawLines(ctx, gridPoints, borgLines);
     }
 
     if (borgLines.length > 0 && drawStartPt) {
+      let startPt = gridPoints.find((pt) => pt.isMiddlePt);
       ctx.beginPath();
-      ctx.fillStyle = "green";
-      ctx.arc(borgLines[0][0].x, borgLines[0][0].y, 6, 0, 2 * Math.PI);
-      ctx.fill();
+      ctx.strokeStyle = "white";
+      ctx.lineWidth = 6;
+      ctx.arc(startPt.x, startPt.y, 6, 0, 2 * Math.PI);
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.strokeStyle = "green";
+      ctx.lineWidth = 2;
+      ctx.arc(startPt.x, startPt.y, 6, 0, 2 * Math.PI);
+      ctx.stroke();
     }
   });
 
@@ -103,17 +112,28 @@ export default function BorgflakeCanvas({
   );
 }
 
-const drawLines = (ctx, borgLines, lineThickness, lineColour) => {
+const drawLines = (ctx, gridPoints, borgLines, lineThickness, lineColour) => {
   ctx.save();
   if (lineColour) ctx.strokeStyle = lineColour;
   if (lineThickness) ctx.lineWidth = lineThickness;
 
-  for (let line of borgLines) {
-    const linePts = line;
+  if (!borgLines || borgLines.length === 0) {
+    return;
+  }
+
+  for (let linePts of borgLines) {
     ctx.beginPath();
-    ctx.moveTo(linePts[0].x, linePts[0].y);
-    for (let i = 1; i < linePts.length; i++) {
-      ctx.lineTo(linePts[i].x, linePts[i].y);
+    let currPoint = gridPoints.find((pt) => pt.isMiddlePt);
+    ctx.moveTo(currPoint.x, currPoint.y);
+
+    for (let currDirection of linePts) {
+      if (currPoint) {
+        let nextPtIndex = getIndexFromDirection(currDirection, currPoint);
+        currPoint = gridPoints[nextPtIndex];
+        if (currPoint && currPoint.x) {
+          ctx.lineTo(currPoint.x, currPoint.y);
+        }
+      }
     }
     ctx.stroke();
   }
