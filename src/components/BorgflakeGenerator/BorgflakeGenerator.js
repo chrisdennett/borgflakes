@@ -6,7 +6,7 @@ import { generateBorglines, generateGridData } from "../../utils/utils";
 
 export default function BorgflakeGenerator({ params }) {
   const [gridPoints, setGridPoints] = useState([]);
-  const [borgLines, setBorgLines] = useState([]);
+  const [borgLines, setBorgLines] = useState({});
 
   const {
     canvasWidth,
@@ -23,8 +23,6 @@ export default function BorgflakeGenerator({ params }) {
 
     const lines = generateBorglines({ gridPoints, allowDiagonals });
     setBorgLines(lines);
-
-    // console.log("gridPoints: ", gridPoints);
 
     // eslint-disable-next-line
   }, [generate, gridPoints]);

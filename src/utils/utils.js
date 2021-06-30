@@ -92,7 +92,69 @@ export function generateBorglines({ gridPoints, allowDiagonals }) {
     lines.push(line);
   }
 
-  return lines;
+  const flippedXLines = getFlippedXLines([...lines]);
+  const flippedYLines = getFlippedYLines([...lines]);
+  const flippedXYLines = getFlippedYLines([...flippedXLines]);
+  const allLines = { lines, flippedXLines, flippedYLines, flippedXYLines };
+
+  return allLines;
+}
+function getFlippedXLines(lines) {
+  const flippedXLines = [];
+  for (let line of lines) {
+    flippedXLines.push(getFlippedXDirections([...line]));
+  }
+
+  return flippedXLines;
+}
+
+function getFlippedYLines(lines) {
+  const flippedYLines = [];
+  for (let line of lines) {
+    flippedYLines.push(getFlippedYDirections([...line]));
+  }
+
+  return flippedYLines;
+}
+
+function getFlippedXDirections(directions) {
+  const flippedDirections = [];
+
+  for (let dir of directions) {
+    if (dir === "L") flippedDirections.push("R");
+    else if (dir === "R") flippedDirections.push("L");
+    else if (dir === "UL") flippedDirections.push("UR");
+    else if (dir === "UR") flippedDirections.push("UL");
+    else if (dir === "DL") flippedDirections.push("DR");
+    else if (dir === "DR") flippedDirections.push("DL");
+    else {
+      flippedDirections.push(dir);
+    }
+  }
+
+  return flippedDirections;
+}
+
+function getFlippedYDirections(directions) {
+  const flippedDirections = [];
+
+  // console.log("directions Y: ", directions);
+
+  for (let dir of directions) {
+    if (dir === "U") flippedDirections.push("D");
+    else if (dir === "D") flippedDirections.push("U");
+    else if (dir === "UL") flippedDirections.push("DL");
+    else if (dir === "UR") flippedDirections.push("DR");
+    else if (dir === "DL") flippedDirections.push("UL");
+    else if (dir === "DR") flippedDirections.push("UR");
+    else {
+      flippedDirections.push(dir);
+    }
+  }
+
+  // console.log("flippedDirections Y: ", flippedDirections);
+
+  return flippedDirections;
 }
 
 // create a line going in random directions until blocked on all

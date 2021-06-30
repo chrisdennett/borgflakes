@@ -9,9 +9,25 @@ export default function BorgflakeSvg({
   borgLines,
   drawStartPt,
   drawGrid,
-  ...rest
+  mirrorLeftRight,
+  mirrorTopBottom,
+  outline1,
+  outline2,
+  outline3,
+  outline4,
+  outline1Colour,
+  outline2Colour,
+  outline3Colour,
+  outline4Colour,
+  lineThickness,
+  lineColour,
 }) {
   let startPt = gridPoints.find((pt) => pt.isMiddlePt);
+  const { lines, flippedXLines, flippedYLines, flippedXYLines } = borgLines;
+
+  if (!lines) return null;
+
+  const flipXY = mirrorTopBottom && mirrorLeftRight;
 
   return (
     <div id="svgHolder">
@@ -29,22 +45,66 @@ export default function BorgflakeSvg({
           height={canvasHeight}
           fill={bgColour}
         />
-
         {drawGrid &&
           gridPoints.map((pt, i) => (
             <circle key={i} fill="white" cx={pt.x} cy={pt.y} r={1} />
           ))}
-
-        {borgLines.map((line, i) => (
+        {lines.map((line, i) => (
           <g key={`line-${i}`}>
             <BorgLine
               pts={line}
-              {...{ ...rest, canvasHeight, canvasWidth, gridPoints }}
+              outline={outline1}
+              outlineColour={outline1Colour}
+              gridPoints={gridPoints}
+              lineThickness={lineThickness}
+              lineColour={lineColour}
             />
           </g>
         ))}
 
-        {borgLines.length > 0 && drawStartPt && (
+        {mirrorLeftRight &&
+          flippedXLines.map((line, i) => (
+            <g key={`mirrorLineX-${i}`}>
+              <BorgLine
+                pts={line}
+                outline={outline2}
+                outlineColour={outline2Colour}
+                gridPoints={gridPoints}
+                lineThickness={lineThickness}
+                lineColour={lineColour}
+              />
+            </g>
+          ))}
+
+        {mirrorTopBottom &&
+          flippedYLines.map((line, i) => (
+            <g key={`mirrorLineY-${i}`}>
+              <BorgLine
+                pts={line}
+                outline={outline3}
+                outlineColour={outline3Colour}
+                gridPoints={gridPoints}
+                lineThickness={lineThickness}
+                lineColour={lineColour}
+              />
+            </g>
+          ))}
+
+        {flipXY &&
+          flippedXYLines.map((line, i) => (
+            <g key={`mirrorLineX-${i}`}>
+              <BorgLine
+                pts={line}
+                outline={outline4}
+                outlineColour={outline4Colour}
+                gridPoints={gridPoints}
+                lineThickness={lineThickness}
+                lineColour={lineColour}
+              />
+            </g>
+          ))}
+
+        {lines.length > 0 && drawStartPt && (
           <>
             <circle
               stroke="white"
@@ -71,18 +131,8 @@ export default function BorgflakeSvg({
 
 function BorgLine({
   pts,
-  mirrorLeftRight,
-  mirrorTopBottom,
-  canvasWidth,
-  canvasHeight,
-  outline1,
-  outline2,
-  outline3,
-  outline4,
-  outline1Colour,
-  outline2Colour,
-  outline3Colour,
-  outline4Colour,
+  outline,
+  outlineColour,
   lineThickness,
   lineColour,
   gridPoints,
@@ -97,55 +147,10 @@ function BorgLine({
       stroke={lineColour}
       strokeWidth={lineThickness}
     >
-      {outline1 && (
-        <path
-          d={line}
-          stroke={outline1Colour}
-          strokeWidth={lineThickness * 3}
-        />
+      {outline && (
+        <path d={line} stroke={outlineColour} strokeWidth={lineThickness * 3} />
       )}
       <path d={line} />
-
-      {mirrorLeftRight && (
-        <g transform={`translate(${canvasWidth}, 0)  scale(-1, 1)`}>
-          {outline2 && (
-            <path
-              d={line}
-              stroke={outline2Colour}
-              strokeWidth={lineThickness * 3}
-            />
-          )}
-          <path d={line} />
-        </g>
-      )}
-
-      {mirrorTopBottom && (
-        <g transform={`translate(0, ${canvasHeight})  scale(1, -1)`}>
-          {outline3 && (
-            <path
-              d={line}
-              stroke={outline3Colour}
-              strokeWidth={lineThickness * 3}
-            />
-          )}
-          <path d={line} />
-        </g>
-      )}
-
-      {mirrorLeftRight && mirrorTopBottom && (
-        <g
-          transform={`translate(${canvasWidth},${canvasHeight})  scale(-1, -1)`}
-        >
-          {outline4 && (
-            <path
-              d={line}
-              stroke={outline4Colour}
-              strokeWidth={lineThickness * 3}
-            />
-          )}
-          <path d={line} />
-        </g>
-      )}
     </g>
   );
 }
@@ -197,7 +202,7 @@ export function getIndexFromDirection(direction, pt) {
   } else if (direction === "DL") {
     nextPtIndex = pt.diagonalDownLeft;
   } else if (direction === "DR") {
-    nextPtIndex = pt.diagonalUpRight;
+    nextPtIndex = pt.diagonalDownRight;
   } else {
     console.log("direction NOT FOUND: ", direction);
   }

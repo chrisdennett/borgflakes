@@ -59,33 +59,33 @@ export default function BorgflakeCanvas({
     }
     drawLines(ctx, gridPoints, borgLines);
 
-    if (mirrorLeftRight) {
-      ctx.translate(canvasWidth, 0);
-      ctx.scale(-1, 1);
+    // if (mirrorLeftRight) {
+    //   ctx.translate(canvasWidth, 0);
+    //   ctx.scale(-1, 1);
 
-      if (outline2) {
-        drawLines(ctx, gridPoints, borgLines, outlineThickness, outline2Colour);
-      }
-      drawLines(ctx, gridPoints, borgLines);
-    }
+    //   if (outline2) {
+    //     drawLines(ctx, gridPoints, borgLines, outlineThickness, outline2Colour);
+    //   }
+    //   drawLines(ctx, gridPoints, borgLines);
+    // }
 
-    if (mirrorTopBottom) {
-      ctx.translate(0, canvasHeight);
-      ctx.scale(1, -1);
-      if (outline3) {
-        drawLines(ctx, borgLines, outlineThickness, outline3Colour);
-      }
-      drawLines(ctx, gridPoints, borgLines);
-    }
+    // if (mirrorTopBottom) {
+    //   ctx.translate(0, canvasHeight);
+    //   ctx.scale(1, -1);
+    //   if (outline3) {
+    //     drawLines(ctx, borgLines, outlineThickness, outline3Colour);
+    //   }
+    //   drawLines(ctx, gridPoints, borgLines);
+    // }
 
-    if (mirrorLeftRight) {
-      ctx.translate(canvasWidth, 0);
-      ctx.scale(-1, 1);
-      if (outline4) {
-        drawLines(ctx, gridPoints, borgLines, outlineThickness, outline4Colour);
-      }
-      drawLines(ctx, gridPoints, borgLines);
-    }
+    // if (mirrorLeftRight) {
+    //   ctx.translate(canvasWidth, 0);
+    //   ctx.scale(-1, 1);
+    //   if (outline4) {
+    //     drawLines(ctx, gridPoints, borgLines, outlineThickness, outline4Colour);
+    //   }
+    //   drawLines(ctx, gridPoints, borgLines);
+    // }
 
     if (borgLines.length > 0 && drawStartPt) {
       let startPt = gridPoints.find((pt) => pt.isMiddlePt);
