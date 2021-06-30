@@ -78,6 +78,8 @@ function getCopyOf(arr) {
 
 // Draws as many lines from starting point as poss.
 export function generateBorglines({ gridPoints, allowDiagonals }) {
+  if (!gridPoints || gridPoints.length === 0) return;
+
   let pts = getCopyOf(gridPoints);
 
   const lines = [];

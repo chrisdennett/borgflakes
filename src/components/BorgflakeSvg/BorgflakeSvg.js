@@ -22,6 +22,8 @@ export default function BorgflakeSvg({
   lineThickness,
   lineColour,
 }) {
+  if (!gridPoints || gridPoints.length === 0 || !borgLines) return null;
+
   let startPt = gridPoints.find((pt) => pt.isMiddlePt);
   const { lines, flippedXLines, flippedYLines, flippedXYLines } = borgLines;
 

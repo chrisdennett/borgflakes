@@ -110,6 +110,8 @@ export default function BorgflakeCanvas({
     }
   });
 
+  if (!borgLines || borgLines.length === 0) return null;
+
   return (
     <canvas
       id="borgFlakeCanvas"
