@@ -25,7 +25,7 @@ export default function BorgflakeGenerator({ params }) {
     setBorgLines(lines);
 
     // eslint-disable-next-line
-  }, [generate, gridPoints]);
+  }, [generate]);
 
   useEffect(() => {
     if (!canvasWidth || !canvasHeight || !cellSize) return;

@@ -52,42 +52,49 @@ export default function BorgflakeCanvas({
     ctx.strokeStyle = lineColour;
     ctx.lineWidth = lineThickness;
 
+    const { lines, flippedXLines, flippedYLines, flippedXYLines } = borgLines;
+
     const outlineThickness = lineThickness * 3;
 
     if (outline1) {
-      drawLines(ctx, gridPoints, borgLines, outlineThickness, outline1Colour);
+      drawLines(ctx, gridPoints, lines, outlineThickness, outline1Colour);
     }
-    drawLines(ctx, gridPoints, borgLines);
+    drawLines(ctx, gridPoints, lines);
 
-    // if (mirrorLeftRight) {
-    //   ctx.translate(canvasWidth, 0);
-    //   ctx.scale(-1, 1);
+    if (mirrorLeftRight && mirrorTopBottom) {
+      if (outline4) {
+        drawLines(
+          ctx,
+          gridPoints,
+          flippedXYLines,
+          outlineThickness,
+          outline4Colour
+        );
+      }
+      drawLines(ctx, gridPoints, flippedXYLines);
+    }
 
-    //   if (outline2) {
-    //     drawLines(ctx, gridPoints, borgLines, outlineThickness, outline2Colour);
-    //   }
-    //   drawLines(ctx, gridPoints, borgLines);
-    // }
+    if (mirrorLeftRight) {
+      if (outline2) {
+        drawLines(
+          ctx,
+          gridPoints,
+          flippedXLines,
+          outlineThickness,
+          outline2Colour
+        );
+      }
+      drawLines(ctx, gridPoints, flippedXLines);
+    }
 
-    // if (mirrorTopBottom) {
-    //   ctx.translate(0, canvasHeight);
-    //   ctx.scale(1, -1);
-    //   if (outline3) {
-    //     drawLines(ctx, borgLines, outlineThickness, outline3Colour);
-    //   }
-    //   drawLines(ctx, gridPoints, borgLines);
-    // }
+    if (mirrorTopBottom) {
+      if (outline3) {
+        drawLines(ctx, flippedYLines, outlineThickness, outline3Colour);
+      }
+      drawLines(ctx, gridPoints, flippedYLines);
+    }
 
-    // if (mirrorLeftRight) {
-    //   ctx.translate(canvasWidth, 0);
-    //   ctx.scale(-1, 1);
-    //   if (outline4) {
-    //     drawLines(ctx, gridPoints, borgLines, outlineThickness, outline4Colour);
-    //   }
-    //   drawLines(ctx, gridPoints, borgLines);
-    // }
-
-    if (borgLines.length > 0 && drawStartPt) {
+    if (lines.length > 0 && drawStartPt) {
       let startPt = gridPoints.find((pt) => pt.isMiddlePt);
       ctx.beginPath();
       ctx.strokeStyle = "white";
@@ -112,16 +119,12 @@ export default function BorgflakeCanvas({
   );
 }
 
-const drawLines = (ctx, gridPoints, borgLines, lineThickness, lineColour) => {
+const drawLines = (ctx, gridPoints, lines, lineThickness, lineColour) => {
   ctx.save();
   if (lineColour) ctx.strokeStyle = lineColour;
   if (lineThickness) ctx.lineWidth = lineThickness;
 
-  if (!borgLines || borgLines.length === 0) {
-    return;
-  }
-
-  for (let linePts of borgLines) {
+  for (let linePts of lines) {
     ctx.beginPath();
     let currPoint = gridPoints.find((pt) => pt.isMiddlePt);
     ctx.moveTo(currPoint.x, currPoint.y);
