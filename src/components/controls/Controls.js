@@ -9,7 +9,7 @@ import {
 } from "use-query-params";
 
 const defaultValsPath =
-  "?allowDiagonals=0&bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&generate=1625085896389&lineColour=%23dedede&lineThickness=3&maxRandomOffsetSize=0.1&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=88&outline1=1&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
+  "?allowDiagonals=0&bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&generate=1625085896389&line2Colour=%23dedede&line3Colour=%23dedede&line4Colour=%23dedede&lineColour=%23ff0000&lineThickness=3&maxRandomOffsetSize=0.1&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=88&outline1=0&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
 
 export default function Controls({
   showControls = true,
@@ -26,6 +26,9 @@ export default function Controls({
     drawStartPt: BooleanParam,
     bgColour: StringParam,
     lineColour: StringParam,
+    line2Colour: StringParam,
+    line3Colour: StringParam,
+    line4Colour: StringParam,
     canvasWidth: NumberParam,
     canvasHeight: NumberParam,
     cellSize: NumberParam,
@@ -96,8 +99,23 @@ export default function Controls({
       },
 
       lineColour: {
-        value: "#dedede",
+        value: "red",
         onChange: (value) => setQuery({ lineColour: value }),
+      },
+
+      line2Colour: {
+        value: "#dedede",
+        onChange: (value) => setQuery({ line2Colour: value }),
+      },
+
+      line3Colour: {
+        value: "#dedede",
+        onChange: (value) => setQuery({ line3Colour: value }),
+      },
+
+      line4Colour: {
+        value: "#dedede",
+        onChange: (value) => setQuery({ line4Colour: value }),
       },
 
       lineThickness: {

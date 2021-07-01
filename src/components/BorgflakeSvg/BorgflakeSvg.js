@@ -21,6 +21,9 @@ export default function BorgflakeSvg({
   outline4Colour,
   lineThickness,
   lineColour,
+  line2Colour,
+  line3Colour,
+  line4Colour,
 }) {
   if (!gridPoints || gridPoints.length === 0 || !borgLines) return null;
 
@@ -73,7 +76,7 @@ export default function BorgflakeSvg({
                 outlineColour={outline2Colour}
                 gridPoints={gridPoints}
                 lineThickness={lineThickness}
-                lineColour={lineColour}
+                lineColour={line2Colour}
               />
             </g>
           ))}
@@ -87,7 +90,7 @@ export default function BorgflakeSvg({
                 outlineColour={outline3Colour}
                 gridPoints={gridPoints}
                 lineThickness={lineThickness}
-                lineColour={lineColour}
+                lineColour={line3Colour}
               />
             </g>
           ))}
@@ -101,7 +104,7 @@ export default function BorgflakeSvg({
                 outlineColour={outline4Colour}
                 gridPoints={gridPoints}
                 lineThickness={lineThickness}
-                lineColour={lineColour}
+                lineColour={line4Colour}
               />
             </g>
           ))}
@@ -178,8 +181,12 @@ function makePathFromDirections(directions, gridPts) {
     let nextPtIndex = getIndexFromDirection(currDirection, currPoint);
 
     if (nextPtIndex && nextPtIndex >= 0 && nextPtIndex < gridPts.length) {
-      currPoint = gridPts[nextPtIndex];
+      const nextPt = gridPts[nextPtIndex];
+
+      // if there's already a line between currPoint and nextPt, use "M" instead of "L"
+
       path += `L${currPoint.x}, ${currPoint.y}`;
+      currPoint = nextPt;
     }
   }
 
