@@ -160,16 +160,6 @@ function BorgLine({
   );
 }
 
-// function makePath(pts) {
-//   let path = `M${pts[0].x}, ${pts[0].y}`;
-
-//   for (let i = 1; i < pts.length; i++) {
-//     path += `L${pts[i].x}, ${pts[i].y}`;
-//   }
-
-//   return path;
-// }
-
 function makePathFromDirections(directions, gridPts) {
   if (!gridPts || gridPts.length === 0) return null;
 
@@ -185,7 +175,7 @@ function makePathFromDirections(directions, gridPts) {
 
       // if there's already a line between currPoint and nextPt, use "M" instead of "L"
 
-      path += `L${currPoint.x}, ${currPoint.y}`;
+      path += `L${nextPt.x}, ${nextPt.y}`;
       currPoint = nextPt;
     }
   }

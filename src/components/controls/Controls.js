@@ -44,6 +44,7 @@ export default function Controls({
     outline4Colour: StringParam,
     maxRandomOffsetSize: NumberParam,
     allowDiagonals: BooleanParam,
+    addMultipleLinesFromStart: BooleanParam,
   });
   let history = useHistory();
 
@@ -170,6 +171,10 @@ export default function Controls({
     }),
 
     Oh_youknow_stuff: folder({
+      addMultipleLinesFromStart: {
+        value: true,
+        onChange: (value) => setQuery({ addMultipleLinesFromStart: value }),
+      },
       allowDiagonals: {
         value: false,
         onChange: (value) => setQuery({ allowDiagonals: value }),

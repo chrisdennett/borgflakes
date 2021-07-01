@@ -9,6 +9,9 @@ export default function BorgflakeCanvas({
   gridPoints,
   borgLines,
   lineColour,
+  line2Colour,
+  line3Colour,
+  line4Colour,
   lineThickness,
   drawStartPt,
   drawGrid,
@@ -59,20 +62,7 @@ export default function BorgflakeCanvas({
     if (outline1) {
       drawLines(ctx, gridPoints, lines, outlineThickness, outline1Colour);
     }
-    drawLines(ctx, gridPoints, lines);
-
-    if (mirrorLeftRight && mirrorTopBottom) {
-      if (outline4) {
-        drawLines(
-          ctx,
-          gridPoints,
-          flippedXYLines,
-          outlineThickness,
-          outline4Colour
-        );
-      }
-      drawLines(ctx, gridPoints, flippedXYLines);
-    }
+    drawLines(ctx, gridPoints, lines, lineThickness, lineColour);
 
     if (mirrorLeftRight) {
       if (outline2) {
@@ -84,14 +74,27 @@ export default function BorgflakeCanvas({
           outline2Colour
         );
       }
-      drawLines(ctx, gridPoints, flippedXLines);
+      drawLines(ctx, gridPoints, flippedXLines, lineThickness, line2Colour);
     }
 
     if (mirrorTopBottom) {
       if (outline3) {
         drawLines(ctx, flippedYLines, outlineThickness, outline3Colour);
       }
-      drawLines(ctx, gridPoints, flippedYLines);
+      drawLines(ctx, gridPoints, flippedYLines, lineThickness, line3Colour);
+    }
+
+    if (mirrorLeftRight && mirrorTopBottom) {
+      if (outline4) {
+        drawLines(
+          ctx,
+          gridPoints,
+          flippedXYLines,
+          outlineThickness,
+          outline4Colour
+        );
+      }
+      drawLines(ctx, gridPoints, flippedXYLines, lineThickness, line4Colour);
     }
 
     if (lines.length > 0 && drawStartPt) {

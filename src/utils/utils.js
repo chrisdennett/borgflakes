@@ -77,7 +77,11 @@ function getCopyOf(arr) {
 }
 
 // Draws as many lines from starting point as poss.
-export function generateBorglines({ gridPoints, allowDiagonals }) {
+export function generateBorglines({
+  gridPoints,
+  allowDiagonals,
+  addMultipleLinesFromStart,
+}) {
   if (!gridPoints || gridPoints.length === 0) return;
 
   let pts = getCopyOf(gridPoints);
@@ -89,9 +93,11 @@ export function generateBorglines({ gridPoints, allowDiagonals }) {
   let line = generateLine(startPt, pts, allowDiagonals);
   lines.push(line);
 
-  while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
-    line = generateLine(startPt, pts, allowDiagonals);
-    lines.push(line);
+  if (addMultipleLinesFromStart) {
+    while (getAvailableNextPts(startPt, pts).availablePts.length > 0) {
+      line = generateLine(startPt, pts, allowDiagonals);
+      lines.push(line);
+    }
   }
 
   const flippedXLines = getFlippedXLines([...lines]);

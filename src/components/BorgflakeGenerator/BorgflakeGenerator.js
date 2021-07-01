@@ -16,16 +16,21 @@ export default function BorgflakeGenerator({ params }) {
     generate,
     maxRandomOffsetSize,
     allowDiagonals,
+    addMultipleLinesFromStart,
   } = params;
 
   useEffect(() => {
     if (!gridPoints || !gridPoints.length > 0) return;
 
-    const lines = generateBorglines({ gridPoints, allowDiagonals });
+    const lines = generateBorglines({
+      gridPoints,
+      allowDiagonals,
+      addMultipleLinesFromStart,
+    });
     setBorgLines(lines);
 
     // eslint-disable-next-line
-  }, [generate]);
+  }, [generate, addMultipleLinesFromStart]);
 
   useEffect(() => {
     if (!canvasWidth || !canvasHeight || !cellSize) return;
@@ -41,7 +46,11 @@ export default function BorgflakeGenerator({ params }) {
     setGridPoints(pts);
 
     if (!borgLines) {
-      const lines = generateBorglines({ gridPoints: pts, allowDiagonals });
+      const lines = generateBorglines({
+        gridPoints: pts,
+        allowDiagonals,
+        addMultipleLinesFromStart,
+      });
       setBorgLines(lines);
     }
 
@@ -53,6 +62,7 @@ export default function BorgflakeGenerator({ params }) {
     outerPadding,
     maxRandomOffsetSize,
     allowDiagonals,
+    addMultipleLinesFromStart,
   ]);
 
   // render //
