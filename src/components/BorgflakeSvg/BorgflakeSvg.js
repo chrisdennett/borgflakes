@@ -32,6 +32,23 @@ export default function BorgflakeSvg({
 
   if (!lines) return null;
 
+  const linePathObjectArrays = getLinePathObjectArrays(lines, gridPoints);
+
+  const flippedXLinePathObjectArrays = getLinePathObjectArrays(
+    flippedXLines,
+    gridPoints
+  );
+  const flippedYLinePathObjectArrays = getLinePathObjectArrays(
+    flippedYLines,
+    gridPoints
+  );
+  const flippedXYLinePathObjectArrays = getLinePathObjectArrays(
+    flippedXYLines,
+    gridPoints
+  );
+
+  console.log("linePathObjectArrays: ", linePathObjectArrays);
+
   const flipXY = mirrorTopBottom && mirrorLeftRight;
 
   return (
@@ -54,24 +71,24 @@ export default function BorgflakeSvg({
           gridPoints.map((pt, i) => (
             <circle key={i} fill="white" cx={pt.x} cy={pt.y} r={1} />
           ))}
-        {lines.map((line, i) => (
+        {linePathObjectArrays.map((linePathObjectArr, i) => (
           <g key={`line-${i}`}>
             <BorgLine
-              pts={line}
+              pathObjectArray={linePathObjectArr}
               outline={outline1}
               outlineColour={outline1Colour}
               gridPoints={gridPoints}
-              lineThickness={lineThickness}
+              lineThickness={lineThickness * 3}
               lineColour={lineColour}
             />
           </g>
         ))}
 
         {mirrorLeftRight &&
-          flippedXLines.map((line, i) => (
+          flippedXLinePathObjectArrays.map((flippedXLinePathObjectArr, i) => (
             <g key={`mirrorLineX-${i}`}>
               <BorgLine
-                pts={line}
+                pathObjectArray={flippedXLinePathObjectArr}
                 outline={outline2}
                 outlineColour={outline2Colour}
                 gridPoints={gridPoints}
@@ -82,10 +99,10 @@ export default function BorgflakeSvg({
           ))}
 
         {mirrorTopBottom &&
-          flippedYLines.map((line, i) => (
+          flippedYLinePathObjectArrays.map((flippedYLinePathObjectArr, i) => (
             <g key={`mirrorLineY-${i}`}>
               <BorgLine
-                pts={line}
+                pathObjectArray={flippedYLinePathObjectArr}
                 outline={outline3}
                 outlineColour={outline3Colour}
                 gridPoints={gridPoints}
@@ -96,10 +113,10 @@ export default function BorgflakeSvg({
           ))}
 
         {flipXY &&
-          flippedXYLines.map((line, i) => (
+          flippedXYLinePathObjectArrays.map((flippedXYLinePathObjectArr, i) => (
             <g key={`mirrorLineX-${i}`}>
               <BorgLine
-                pts={line}
+                pathObjectArray={flippedXYLinePathObjectArr}
                 outline={outline4}
                 outlineColour={outline4Colour}
                 gridPoints={gridPoints}
@@ -134,15 +151,27 @@ export default function BorgflakeSvg({
   );
 }
 
+function getLinePathObjectArrays(directionArrays, gridPts) {
+  const linePathObjectArrays = [];
+
+  for (let dirArr of directionArrays) {
+    const lineObjectArr = makePathObjectsArrFromDirections(dirArr, gridPts);
+    linePathObjectArrays.push(lineObjectArr);
+  }
+
+  return linePathObjectArrays;
+}
+
 function BorgLine({
-  pts,
+  pathObjectArray,
   outline,
   outlineColour,
   lineThickness,
   lineColour,
-  gridPoints,
 }) {
-  const line = makePathFromDirections(pts, gridPoints);
+  if (!pathObjectArray) return null;
+
+  const path = makePathFromPathObjectArray(pathObjectArray);
 
   return (
     <g
@@ -153,15 +182,57 @@ function BorgLine({
       strokeWidth={lineThickness}
     >
       {outline && (
-        <path d={line} stroke={outlineColour} strokeWidth={lineThickness * 3} />
+        <path d={path} stroke={outlineColour} strokeWidth={lineThickness * 3} />
       )}
-      <path d={line} />
+      <path d={path} />
     </g>
   );
 }
 
+function makePathFromPathObjectArray(pathObjectArray) {
+  let path = "";
+
+  for (let pathObj of pathObjectArray) {
+    path += `${pathObj.type} ${pathObj.x}, ${pathObj.y}`;
+  }
+
+  return path;
+}
+
+function makePathObjectsArrFromDirections(directions, gridPts) {
+  if (!gridPts || gridPts.length === 0) return null;
+
+  let currPoint = gridPts.find((pt) => pt.isMiddlePt);
+
+  const pathObject = [];
+  pathObject.push({
+    type: "M",
+    x: currPoint.x,
+    y: currPoint.y,
+  });
+
+  for (let currDirection of directions) {
+    let nextPtIndex = getIndexFromDirection(currDirection, currPoint);
+
+    if (nextPtIndex && nextPtIndex >= 0 && nextPtIndex < gridPts.length) {
+      const nextPt = gridPts[nextPtIndex];
+
+      pathObject.push({
+        type: "L",
+        x: nextPt.x,
+        y: nextPt.y,
+      });
+
+      currPoint = nextPt;
+    }
+  }
+
+  return pathObject;
+}
+
 function makePathFromDirections(directions, gridPts) {
   if (!gridPts || gridPts.length === 0) return null;
+  if (!directions || directions.length === 0) return null;
 
   let currPoint = gridPts.find((pt) => pt.isMiddlePt);
 

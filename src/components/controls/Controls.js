@@ -9,7 +9,7 @@ import {
 } from "use-query-params";
 
 const defaultValsPath =
-  "?allowDiagonals=0&bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&generate=1625085896389&line2Colour=%23dedede&line3Colour=%23dedede&line4Colour=%23dedede&lineColour=%23ff0000&lineThickness=3&maxRandomOffsetSize=0.1&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=88&outline1=0&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
+  "?addMultipleLinesFromStart=1&allowDiagonals=0&bgColour=%23333333&canvasHeight=800&canvasWidth=800&cellSize=10&drawGrid=0&drawStartPt=0&generate=1625156099424&line2Colour=%23dedede&line3Colour=%23dedede&line4Colour=%23dedede&lineColour=%23ff0000&lineThickness=3&maxRandomOffsetSize=0.1&mirrorLeftRight=1&mirrorTopBottom=1&outerPadding=88&outline1=0&outline1Colour=%23ff0000&outline2=0&outline2Colour=%23ff0000&outline3=0&outline3Colour=%23ff0000&outline4=0&outline4Colour=%23ff0000&outputType=svg";
 
 export default function Controls({
   showControls = true,
